@@ -1,0 +1,378 @@
+<!DOCTYPE html ng-app="myApp">
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js">
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SMOP Invoice</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="bootstrap.min.css">
+
+	<link rel="stylesheet" href="app.css">
+
+
+
+	<script src="angular.min.js"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
+
+
+	<script src="app.model.js"></script>
+
+	<script src="app.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="container" ng-controller="getDetailsController">
+
+			<div id="form" ng-hide="preview">
+				<!-- DETAILS -->
+				<div class="row">
+					<div class="col-md-4">
+						<fieldset>
+							<legend>Client Details</legend>
+							<table class="details">
+								<thead>
+									<tr>
+										<td style="width:30%;">Name</td>
+										<td><input type="text" name="clientName" ng-model="clientName" /></td>
+									</tr>
+									<tr>
+										<td>Address</td>
+										<td><textarea type="text" name="clientAddress" ng-model="clientAddress"></textarea></td>
+									</tr>
+									<tr>
+										<td>City</td>
+										<td><input type="text" name="clientCity" ng-model="clientCity"></td>
+									</tr>
+									<tr>
+										<td>Pincode</td>
+										<td><input type="text" name="clientPincode" ng-model="clientPincode"></td>
+									</tr>
+									<tr>
+										<td>GST No</td>
+										<td><input type="text" name="clientGst" ng-model="clientGstNo" /></td>
+									</tr>
+								</thead>
+							</table>
+						</fieldset>
+					</div>
+
+					<div class="col-md-4">
+						<fieldset>
+							<legend>Invoice Details</legend>
+							<table class="details">
+								<thead>
+									<tr>
+										<td style="width:30%;">Date</td>
+										<td>
+											<input name="invoiceDate" type="date" ng-model="invoiceDate" />
+										</td>
+									</tr>
+									<tr>
+										<td>Invoice No</td>
+										<td><input type="text" name="invoiceNo" ng-model="invoiceNo" /></td>
+									</tr>
+									<tr>
+										<td>GST Type</td>
+										<td>
+											<div class="radio-container">
+												<input type="radio" id="gst-option" name="gstType" value="GST" ng-model="gstType"> <label for="gst-option">GST</label><br>
+											</div>
+											<div class="radio-container">
+												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="gstType"><label for="igst-option"> I-GST</label><br>
+											</div>
+										</td>
+									</tr>
+								</thead>
+							</table>
+						</fieldset>
+					</div>
+
+					<div class="col-md-4">
+						<fieldset>
+							<legend>Transport Details</legend>
+							<table class="details">
+								<thead>
+									<tr>
+										<td style="width:40%;">Despatched Through</td>
+										<td><input type="text" name="despatchedThru" ng-model="despatchedThru" /></td>
+									</tr>
+									<tr>
+										<td>L.R No</td>
+										<td><input type="text" name="lrNo" ng-model="lrNo" /></td>
+									</tr>
+									<tr>
+										<td>Despatched Date</td>
+										<td><input type="date" name="despatchedDate" ng-model="despatchedDate" /></td>
+									</tr>
+									<tr>
+										<td>Despatched To</td>
+										<td><input type="text" name="despatchedTo" ng-model="despatchedTo" /></td>
+									</tr>
+									<tr>
+										<td>Documents Through</td>
+										<td><input type="text" name="documentsThru" ng-model="documentsThru" /></td>
+									</tr>
+
+								</thead>
+							</table>
+						</fieldset>
+					</div>
+				</div>
+
+				<hr/>
+
+				<!-- PRODUCT -->
+				<div class="row">
+					<div class="col-md-12">
+						<table class="product">
+							<thead>
+								<tr>
+									<th style="width:45%">Particulars</th>
+									<th style="width:10%;">Quantity</th>
+									<th style="width:15%;">Quantity Desc</th>
+									<th style="width:10%;">Rate</th>
+									<th style="width:10%;">Amount</th>
+									<th style="width:5%;"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="product in products">
+									<td> <textarea rows="1" name="productName1" ng-model="product.productName"></textarea></td>
+									<td><input type="number" ng-change="updateAmount(product)" name="quantity" ng-model="product.quantity" /></td>
+									<td><input type="text" name="quantityDesc" ng-model="product.quantityDesc" /></td>
+									<td><input type="number" ng-change="updateAmount(product)" name="rate" ng-model="product.rate" /></td>
+									<td><input type="text" name="amount" disabled ng-model="product.amount" class="text-right" /></td>
+									<td>
+										<button ng-if="products.length > 1" class="button-icon" ng-click="removeProduct(product)"><img  src="images/remove.png" alt="remove" /></button>
+										<button style="cursor:default;" ng-if="products.length == 1" class="button-icon"><img  src="images/remove-disabled.png" alt="remove" /></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<button ng-click="addProduct()" class="positiveButton">+ Add Product</button>
+
+
+					</div>
+
+				</div>
+
+				<!-- TAXES -->
+				<div class="row">
+					<div class="col-md-6">
+						<!-- <div ng-bind="wordsConvertor(balanceAmount)"></div> -->
+					</div>
+					<div class="col-md-6">
+						<table class="taxes">
+							<tr>
+								<td>Goods Value</td>
+								<td style="width:20%;"></td>
+								<td>
+									<div ng-bind="goodsValue"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>Packing and Forwarding</td>
+								<td></td>
+								<td><input type="number" name="packingValue" ng-model="packingValue" /></td>
+							</tr>
+							<tr>
+								<td>
+									<span ng-bind="gstType"></span>
+								</td>
+								<td>
+									<select name="gst" ng-model="gstSlab">
+						<option value="5">5 %</option>
+						<option value="12">12 %</option>
+						<option value="18">18 %</option>
+						<option value="28">28 %</option>
+					</select>
+								</td>
+								<td>
+									<div ng-bind="gstValue"></div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Total</td>
+								<td>
+									<div ng-bind="totalAmount"></div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Less: Advance</td>
+								<td><input type="number" name="advanceAmount" ng-model="advanceAmount" /></td>
+							</tr>
+							<tr>
+								<td class="positive" colspan="2">Balance</td>
+								<td class="positive">
+									<div ng-bind="balanceAmount"></div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" class="text-right"><button class="positiveButton" ng-click="swapView('preview')">Print Preview >></button></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<hr/>
+			</div>
+
+			<div id="preview" ng-show="preview" style="position:relative;min-height:1500px;">
+				<table class="print">
+
+					<tr class="design">
+						<td colspan="3"></td>
+					</tr>
+					<tr class="logo">
+						<td>
+							<img src="images/logo2.png" alt="logo" width="400" />
+						</td>
+						<td style="text-align:center">
+							<strong>INVOICE</strong>
+						</td>
+						<td style="text-align:right">
+							<div>Shree Mahalakshmi Offset Prints</div>
+							178, Munangi Nadar Street, <br/> 
+							Sivakasi - 626123<br/>
+							GST No: <span>0934738473</span>
+						</td>
+					</tr>
+
+					<tr class="header">
+						<td class="grey">Bill To:</td>
+						<td class="grey" >Despatch Details:</td>
+						<td class="grey">Invoice Details:</td>
+					</tr>
+					<tr class="content">
+							<td>
+								<span>{{clientName}}</span><br/>
+								<span>{{clientAddress}}</span><br/>
+								<span>{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
+								<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
+							</td>
+							<td>
+								<span ng-if="despatchedThru">Despatched Thru: <span>{{despatchedThru}}</span></span><br/> 
+								<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/> 
+								<span ng-if="despatchedDate">Despatched Date: <span>{{despatchedDate | date}}</span></span><br/>										
+								<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span></span><br/> 
+								<span ng-if="documentsThru">Documents Thru: <span>{{documentsThru}}</span></span><br/>
+							</td>
+							<td>
+								<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span></span><br/> 
+								<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span><br/> 
+							</td>
+					</tr>
+
+
+					<tr>
+						<td class="product-table-container" colspan="3" style="padding:30px 0px 0px 0px;">
+							<!-- PRODUCT TABLE -->
+							<table style="width:100%;" class="print-products">
+								<tr class="header">
+									<td style="width:50%;">Particulars</td>
+									<td>Quantity</td>
+									<td>Rate</td>
+									<td>Amount</td>
+								</tr>
+								<tr class="content">
+									<td colspan="4" style="padding:0px;">
+										<table class="print-products-inner-table">
+											<tr ng-repeat="product in products">
+												<td colspan="2" style="width:50%;">{{product.productName}}</td>
+												<td><span> {{product.quantity}}
+														<span ng-if="product.quantityDesc">
+															<br/>
+															({{product.quantityDesc}})
+														</span>
+													</span></td>
+												<td>{{product.rate}}</td>
+												<td>{{product.amount}}</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" rowspan="{{gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
+										<div>Amount in Words:</div>
+										<div class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></div>
+									</td>
+									<td>Goods Value: </td>
+									<td>{{goodsValue}}</td>
+								</tr>
+								<tr>
+									<td ng-if="packingValue">Packaging and Forwarding: </td>
+									<td ng-if="packingValue">{{packingValue}}</td>
+								</tr>
+								<tr ng-if="gstType == 'GST'">
+									<td>CGST ({{gstSlab/2}}%):</td>
+									<td>{{gstValue/2}}</td>
+								</tr>
+								<tr ng-if="gstType == 'GST'">
+										<td>SGST ({{gstSlab/2}}%):</td>
+										<td>{{gstValue/2}}</td>
+									</tr>
+								<tr>
+								<tr ng-if="gstType == 'IGST'">
+										<td>IGST ({{gstSlab}}%):</td>
+										<td>{{gstValue}}</td>
+									</tr>
+								<tr>
+									<td>Total: </td>
+									<td>{{totalAmount}}</td>
+								</tr>
+								<tr>
+									<td ng-if="advanceAmount">Advance: </td>
+									<td ng-if="advanceAmount">{{advanceAmount}}</td>
+								</tr>
+								<tr>
+									<td><strong><i>Balance: </i></strong></td>
+									<td><strong><i>{{balanceAmount}}</i></strong></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+											
+											
+									</td>
+									<td colspan="2">
+										<button style="float:right;margin-top:50px;" class="positiveButton" ng-click="print()">Print</button>
+										<button style="float:right;margin-top:50px;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
+											
+									</td>
+								</tr>
+								
+							</table>
+						</td>
+					</tr>
+
+
+				</table>
+
+
+
+				<table class="disclaimer">
+						<tr class="">
+								<td colspan="2">
+									<strong>Terms and Conditions:</strong><br/>
+									All transactions are made subject to Sivakasi Jurisdiction
+								</td>
+								<td colspan="2" class="text-right">
+									For <div>Shree Mahalakshmi Offset Prints</div>
+									<div style="height:50px"></div>
+									Proprietor
+								</td>
+							</tr>
+					</table>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
