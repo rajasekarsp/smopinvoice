@@ -12,8 +12,10 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 	$scope.totalAmount = 0;
 	$scope.advanceAmount = 0;
 	$scope.balanceAmount = 0;
+	$scope.preparedBy = "MSP";
+	$scope.checkedBy = "MSP";
 
-	$scope.preview = false;
+	$scope.preview = true;
 	/* PRODUCTS */
 	$scope.products.push(new Product());
 	$scope.addProduct = function(){
@@ -26,7 +28,7 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 	}
 
 	$scope.updateAmount = function(product){
-		product.amount = product.rate * product.quantity;
+		product.amount = parseFloat(((product.rate * product.quantity) / product.ratePer).toFixed(2));
 	}
 	var ones = ['','one ','two ','three ','four ', 'five ','six ','seven ','eight ','nine ','ten ','eleven ','twelve ','thirteen ','fourteen ','fifteen ','sixteen ','seventeen ','eighteen ','nineteen '];
 	var tens = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
@@ -39,7 +41,7 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 		str += (n[2] != 0) ? (ones[Number(n[2])] || tens[n[2][0]] + ' ' + ones[n[2][1]]) + 'lakh ' : '';
 		str += (n[3] != 0) ? (ones[Number(n[3])] || tens[n[3][0]] + ' ' + ones[n[3][1]]) + 'thousand ' : '';
 		str += (n[4] != 0) ? (ones[Number(n[4])] || tens[n[4][0]] + ' ' + ones[n[4][1]]) + 'hundred ' : '';
-		str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (ones[Number(n[5])] || tens[n[5][0]] + ' ' + ones[n[5][1]]) + 'rupees only ' : 'rupees only';
+		str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (ones[Number(n[5])] || tens[n[5][0]] + ' ' + ones[n[5][1]]) + 'only ' : 'only';
 		return str;
 	}
 	
@@ -49,6 +51,7 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 			angular.forEach($scope.products, function(product) {
 				$scope.goodsValue += product.amount;
 			});
+			$scope.goodsValue += $scope.packingValue;
 			$scope.gstValue = parseFloat(( ($scope.goodsValue + $scope.packingValue) * $scope.gstSlab / 100).toFixed(2));
 			$scope.totalAmount = parseFloat(($scope.goodsValue + $scope.packingValue + $scope.gstValue).toFixed(2));
 			$scope.balanceAmount = parseFloat(($scope.totalAmount - $scope.advanceAmount).toFixed(0));			

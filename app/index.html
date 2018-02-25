@@ -14,8 +14,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="bootstrap.min.css">
 
-	<link rel="stylesheet" href="app.css">
-
+	<link rel="stylesheet" href="app.css" media="screen, print" type="text/css">
+	<!-- <link rel="stylesheet" href="app.css" type="text/css" media="print" /> -->
 
 
 	<script src="angular.min.js"></script>
@@ -45,8 +45,12 @@
 										<td><input type="text" name="clientName" ng-model="clientName" /></td>
 									</tr>
 									<tr>
-										<td>Address</td>
-										<td><textarea type="text" name="clientAddress" ng-model="clientAddress"></textarea></td>
+										<td>Address Line 1</td>
+										<td><textarea type="text" name="clientAddress" ng-model="clientAddress1"></textarea></td>
+									</tr>
+									<tr>
+										<td>Address Line 2</td>
+										<td><textarea type="text" name="clientAddress" ng-model="clientAddress2"></textarea></td>
 									</tr>
 									<tr>
 										<td>City</td>
@@ -67,7 +71,7 @@
 
 					<div class="col-md-4">
 						<fieldset>
-							<legend>Invoice Details</legend>
+							<legend></legend>
 							<table class="details">
 								<thead>
 									<tr>
@@ -81,6 +85,10 @@
 										<td><input type="text" name="invoiceNo" ng-model="invoiceNo" /></td>
 									</tr>
 									<tr>
+										<td>E-Waybill No</td>
+										<td><input type="text" name="eWayBillNo" ng-model="eWayBillNo" /></td>
+									</tr>
+									<tr>
 										<td>GST Type</td>
 										<td>
 											<div class="radio-container">
@@ -89,6 +97,18 @@
 											<div class="radio-container">
 												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="gstType"><label for="igst-option"> I-GST</label><br>
 											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Prepared By</td>
+										<td>
+											<input type="text" name="preparedBy" ng-model="preparedBy" />
+										</td>
+									</tr>
+									<tr>
+										<td>Checked By</td>
+										<td>
+											<input type="text" name="checkedBy" ng-model="checkedBy" />
 										</td>
 									</tr>
 								</thead>
@@ -138,8 +158,8 @@
 								<tr>
 									<th style="width:45%">Particulars</th>
 									<th style="width:10%;">Quantity</th>
-									<th style="width:15%;">Quantity Desc</th>
-									<th style="width:10%;">Rate</th>
+									<th style="width:10%;">Rate Per Unit</th>
+									<th style="width:15%;">Unit</th>
 									<th style="width:10%;">Amount</th>
 									<th style="width:5%;"></th>
 								</tr>
@@ -148,8 +168,14 @@
 								<tr ng-repeat="product in products">
 									<td> <textarea rows="1" name="productName1" ng-model="product.productName"></textarea></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="quantity" ng-model="product.quantity" /></td>
-									<td><input type="text" name="quantityDesc" ng-model="product.quantityDesc" /></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="rate" ng-model="product.rate" /></td>
+									<td>
+										<select name="ratePer" ng-model="product.ratePer" ng-change="updateAmount(product)">
+											<option value="1">Unit</option>
+											<option value="100">Hundred</option>
+											<option value="1000">Thousand</option>
+										</select>
+									</td>
 									<td><input type="text" name="amount" disabled ng-model="product.amount" class="text-right" /></td>
 									<td>
 										<button ng-if="products.length > 1" class="button-icon" ng-click="removeProduct(product)"><img  src="images/remove.png" alt="remove" /></button>
@@ -173,16 +199,16 @@
 					<div class="col-md-6">
 						<table class="taxes">
 							<tr>
-								<td>Goods Value</td>
-								<td style="width:20%;"></td>
-								<td>
-									<div ng-bind="goodsValue"></div>
-								</td>
-							</tr>
-							<tr>
 								<td>Packing and Forwarding</td>
 								<td></td>
-								<td><input type="number" name="packingValue" ng-model="packingValue" /></td>
+								<td><input style="text-align:right;" type="number" name="packingValue" ng-model="packingValue" /></td>
+							</tr>
+							<tr>
+								<td>Goods Value</td>
+								<td style="width:20%;"></td>
+								<td class="amount">
+									<div ng-bind="goodsValue | number : 2"></div>
+								</td>
 							</tr>
 							<tr>
 								<td>
@@ -196,23 +222,23 @@
 						<option value="28">28 %</option>
 					</select>
 								</td>
-								<td>
-									<div ng-bind="gstValue"></div>
+								<td class="amount">
+									<div ng-bind="gstValue | number : 2"></div>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">Total</td>
-								<td>
-									<div ng-bind="totalAmount"></div>
+								<td class="amount">
+									<div ng-bind="totalAmount | number : 2"></div>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">Less: Advance</td>
-								<td><input type="number" name="advanceAmount" ng-model="advanceAmount" /></td>
+								<td><input style="text-align:right;" type="number" name="advanceAmount" ng-model="advanceAmount" /></td>
 							</tr>
 							<tr>
 								<td class="positive" colspan="2">Balance</td>
-								<td class="positive">
+								<td class="positive amount">
 									<div ng-bind="balanceAmount"></div>
 								</td>
 							</tr>
@@ -225,127 +251,154 @@
 				<hr/>
 			</div>
 
-			<div id="preview" ng-show="preview" style="position:relative;min-height:1500px;">
+			<div id="preview" ng-show="preview">
 				<table class="print">
-
+					<!--
 					<tr class="design">
-						<td colspan="3"></td>
+						<td colspan="3"><img src="images/header1.png" alt="" /></td>
 					</tr>
+					-->
 					<tr class="logo">
 						<td>
-							<img src="images/logo2.png" alt="logo" width="400" />
+							<img src="images/SMOP_LOGO.png" alt="logo" width="180" />
 						</td>
 						<td style="text-align:center">
-							<strong>INVOICE</strong>
+							<strong>INVOICE</strong><br/>
+							<strong>Shree Mahalakshmi Offset Prints</strong><br/>
 						</td>
 						<td style="text-align:right">
-							<div>Shree Mahalakshmi Offset Prints</div>
-							178, Munangi Nadar Street, <br/> 
-							Sivakasi - 626123<br/>
-							GST No: <span>0934738473</span>
+							178, Munangi Nadar Street, <br/> Sivakasi - 626123<br/> GST No: <span>0934738473</span>
 						</td>
 					</tr>
 
 					<tr class="header">
-						<td class="grey">Bill To:</td>
-						<td class="grey" >Despatch Details:</td>
-						<td class="grey">Invoice Details:</td>
+						<td>To:</td>
+						<td>Despatch Details:</td>
+						<td class="noGrey"></td>
 					</tr>
 					<tr class="content">
-							<td>
-								<span>{{clientName}}</span><br/>
-								<span>{{clientAddress}}</span><br/>
-								<span>{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
-								<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
-							</td>
-							<td>
-								<span ng-if="despatchedThru">Despatched Thru: <span>{{despatchedThru}}</span></span><br/> 
-								<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/> 
-								<span ng-if="despatchedDate">Despatched Date: <span>{{despatchedDate | date}}</span></span><br/>										
-								<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span></span><br/> 
-								<span ng-if="documentsThru">Documents Thru: <span>{{documentsThru}}</span></span><br/>
-							</td>
-							<td>
-								<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span></span><br/> 
-								<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span><br/> 
-							</td>
+						<td>
+							<span ng-if="clientName">{{clientName}}</span><br/>
+							<span ng-if="clientAddress1">{{clientAddress1}}</span><br/>
+							<span ng-if="clientAddress2">{{clientAddress2}}</span><br/>
+							<span ng-if="clientCity">{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
+							<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
+						</td>
+						<td>
+							<span ng-if="despatchedThru">Despatched Thru: <span>{{despatchedThru}}</span></span><br/>
+							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/>
+							<span ng-if="despatchedDate">Despatched Date: <span>{{despatchedDate | date}}</span></span><br/>
+							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span></span><br/>
+							<span ng-if="documentsThru">Documents Thru: <span>{{documentsThru}}</span></span>
+						</td>
+						<td>
+							<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span></span><br/>
+							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span></span><br/>
+							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span>
+						</td>
 					</tr>
 
 
 					<tr>
-						<td class="product-table-container" colspan="3" style="padding:30px 0px 0px 0px;">
+						<td class="product-table-container" colspan="3" style="padding:15px 0px 0px 0px;">
+							<!--
+							<div class="print-div-table">
+								<div class="print-row print-row-header">
+									<div class="print-col" style="width:8%;">S.No</div>
+									<div class="print-col" style="width:42%;">Particulars</div>
+									<div class="print-col" style="width:15%;">Quantity</div>
+									<div class="print-col" style="width:15%;">Rate</div>
+									<div class="print-col" style="width:20%;">Amount</div>
+								</div>
+								<div class="print-row" ng-repeat="product in products">
+									<div class="print-col" style="width:8%;">{{$index + 1}}</div>
+									<div class="print-col" style="width:42%;">{{product.productName}}</div>
+									<div class="print-col" style="width:15%;">{{product.quantity}}</div>
+									<div class="print-col" style="width:10%;">{{product.rate}}
+										<span ng-if="product.ratePer !=1">
+												<br/>
+												<i>(per {{product.ratePer}})</i>
+											</span></div>
+									<div class="print-col" style="width:20%;">{{product.amount | number : 2}}</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							-->
 							<!-- PRODUCT TABLE -->
+							<!-- LOOSE KEETHI -->
 							<table style="width:100%;" class="print-products">
 								<tr class="header">
-									<td style="width:50%;">Particulars</td>
-									<td>Quantity</td>
-									<td>Rate</td>
-									<td>Amount</td>
+									<td style="width:8%;"><div>S.No</div></td>
+									<td style="width:42%;"><div>Particulars</div></td>
+									<td style="width:15%;"><div>Quantity</div></td>
+									<td style="width:15%;"><div>Rate</div></td>
+									<td style="width:20%;"><div>Amount</div></td>
 								</tr>
 								<tr class="content">
-									<td colspan="4" style="padding:0px;">
+									<td colspan="5" style="padding:0px; border-bottom:0px;" class="print-products-inner-table-container">
 										<table class="print-products-inner-table">
 											<tr ng-repeat="product in products">
-												<td colspan="2" style="width:50%;">{{product.productName}}</td>
-												<td><span> {{product.quantity}}
-														<span ng-if="product.quantityDesc">
-															<br/>
-															({{product.quantityDesc}})
-														</span>
-													</span></td>
-												<td>{{product.rate}}</td>
-												<td>{{product.amount}}</td>
+												<td style="width:8%;"><div class="product-cell-value">{{$index + 1}}</div></td>
+												<td colspan="2" style="width:42%;"><div class="product-cell-value">{{product.productName}}</div></td>
+												<td style="width:15%;"><span> <div class="product-cell-value">{{product.quantity}}</div></span></td>
+												<td style="width:15%;">
+														<div class="product-cell-value">
+													{{product.rate}}
+													<span ng-if="product.ratePer !=1">
+														<br/>
+														<i>(per {{product.ratePer}})</i>
+													</span>
+													</div>
+												</td>
+												<td style="width:20%;" class="amount"><div class="product-cell-value">{{product.amount | number : 2}}</div></td>
 											</tr>
 										</table>
 									</td>
 								</tr>
-								<tr>
+
+								<tr class="border">
 									<td colspan="2" rowspan="{{gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
-										<div>Amount in Words:</div>
-										<div class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></div>
+										<div class="dotted">
+											Rupees:
+											<i><span class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></span></i>
+										</div>
+										<div>
+										<div class="errors">
+											E. &amp; O.E: 
+										</div>
+										</div>
 									</td>
-									<td>Goods Value: </td>
-									<td>{{goodsValue}}</td>
+									<td colspan="2">Packaging and Forwarding: </td>
+									<td class="amount">{{packingValue | number : 2}}</td>
 								</tr>
-								<tr>
-									<td ng-if="packingValue">Packaging and Forwarding: </td>
-									<td ng-if="packingValue">{{packingValue}}</td>
+								<tr class="border">
+									<td colspan="2">Goods Value: </td>
+									<td class="amount">{{goodsValue | number : 2}}</td>
 								</tr>
-								<tr ng-if="gstType == 'GST'">
-									<td>CGST ({{gstSlab/2}}%):</td>
-									<td>{{gstValue/2}}</td>
+								<tr class="border" ng-if="gstType == 'GST'">
+									<td colspan="2">CGST ({{gstSlab/2}}%):</td>
+									<td class="amount">{{gstValue/2 | number : 2}}</td>
 								</tr>
-								<tr ng-if="gstType == 'GST'">
-										<td>SGST ({{gstSlab/2}}%):</td>
-										<td>{{gstValue/2}}</td>
+								<tr class="border" ng-if="gstType == 'GST'">
+										<td colspan="2">SGST ({{gstSlab/2}}%):</td>
+										<td class="amount">{{gstValue/2 | number : 2}}</td>
 									</tr>
 								<tr>
-								<tr ng-if="gstType == 'IGST'">
-										<td>IGST ({{gstSlab}}%):</td>
-										<td>{{gstValue}}</td>
+								<tr class="border" rowspan="2" ng-if="gstType == 'IGST'">
+										<td colspan="2">IGST ({{gstSlab}}%):</td>
+										<td class="amount">{{gstValue | number : 2}}</td>
 									</tr>
-								<tr>
-									<td>Total: </td>
-									<td>{{totalAmount}}</td>
+								<tr class="border">
+									<td colspan="2">Total: </td>
+									<td class="amount">{{totalAmount | number : 2}}</td>
 								</tr>
-								<tr>
-									<td ng-if="advanceAmount">Advance: </td>
-									<td ng-if="advanceAmount">{{advanceAmount}}</td>
+								<tr class="border">
+									<td colspan="2">Advance: </td>
+									<td class="amount">{{advanceAmount | number : 2}}</td>
 								</tr>
-								<tr>
-									<td><strong><i>Balance: </i></strong></td>
-									<td><strong><i>{{balanceAmount}}</i></strong></td>
-								</tr>
-								<tr>
-									<td colspan="2">
-											
-											
-									</td>
-									<td colspan="2">
-										<button style="float:right;margin-top:50px;" class="positiveButton" ng-click="print()">Print</button>
-										<button style="float:right;margin-top:50px;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
-											
-									</td>
+								<tr class="border">
+									<td colspan="2"><strong><i>Balance: </i></strong></td>
+									<td class="amount"><strong><i>{{balanceAmount | number : 2}}</i></strong></td>
 								</tr>
 								
 							</table>
@@ -358,18 +411,29 @@
 
 
 				<table class="disclaimer">
-						<tr class="">
-								<td colspan="2">
-									<strong>Terms and Conditions:</strong><br/>
-									All transactions are made subject to Sivakasi Jurisdiction
-								</td>
-								<td colspan="2" class="text-right">
-									For <div>Shree Mahalakshmi Offset Prints</div>
-									<div style="height:50px"></div>
-									Proprietor
-								</td>
-							</tr>
-					</table>
+					<tr class="">
+						<td colspan="2">
+							Prepared By:&nbsp;<span ng-bind="preparedBy"></span><br/>
+							<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="checkedBy"></span></div>
+							<div class="small">
+								<strong>Terms and Conditions:</strong><br/> All transactions are made subject to Sivakasi Jurisdiction
+							</div>
+						</td>
+						<td colspan="2" class="text-right">
+							<div>For <strong>Shree Mahalakshmi Offset Prints</strong></div>
+							<div style="height:50px"></div>
+							Proprietor
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"></td>
+						<td colspan="2">
+							<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
+							<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
+
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</div>

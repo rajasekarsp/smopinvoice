@@ -17,7 +17,7 @@
 		font-style: italic;
 	}
 	
-	input[type=text], input[type=number], input[type=date], textarea{
+	input[type=text], input[type=number], input[type=date], textarea, select{
 		font-size:20px;
 		padding:2px 5px;
 		width:100%;
@@ -84,7 +84,12 @@
 	table.taxes tr td{
 		padding:5px 5px;
 		vertical-align:middle;
-		border:1px solid #ccc;
+		border:1px solid #ddd;
+	}
+
+	table.taxes tr td.amount{
+		text-align: right;
+		padding-right:25px;
 	}
 
 	table.taxes tr td input, table.taxes tr td:last-child{
@@ -137,13 +142,16 @@
 		text-transform: capitalize;
 	}
 	
-
+	table.print-products tr.border td{
+		border: 1px solid #aaa;
+		padding:10px;
+	}
 /* Bootstrap Overrides */
 
 @media (min-width: 1200px){
 	.container {
 		width: 1180px;
-		padding:0px 20px 50px 20px;
+		padding:0px 50px 50px 50px;
 		background-color:#fff;
 		border-left:15px solid #f1f1f1;
 		border-right:15px solid #f1f1f1;
@@ -162,19 +170,26 @@ table.print tr td{
 
 table.print tr.design td{
 	height:70px;
-	background-color:#d7d7d7;
-	background:url('images/header1.png') left;
 }
 
 table.print tr.logo td{
-	padding-top:20px;
+	padding-left:0px;
+	padding-bottom:20px;
 }
 
 
-table.print tr.header td{
-	background-color:#f1f1f1;
+table.print tr.header > td{
+	background-color:#ccc;
 	height:20px;
-	border:1px solid #ddd;
+	border:1px solid #aaa;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+table.print tr.content > td{
+	border:1px solid #aaa;
+	padding-left:10px;
+	padding-right:10px;
 }
 
 table.print tr td.product-table-container{
@@ -186,14 +201,43 @@ table.print-products tr.content{
 	/* height:740px; */
 }
 
+table.print-products tr.content{
+
+}
+
+table.print-products tr td .product-cell-value{
+	padding-left:10px;
+	padding-right:10px;
+}
+
 table.print tr.content td{
-	border:1px solid #ddd;
+	/* LOOSE KEETHI */
+	/*
+	border:1px solid #aaa;
+	*/
+}
+
+table.print-products tr td.print-products-inner-table-container{
+
+	height:300px;
+	/* LOOSE KEETHI */
+	background:url('images/rulers_2.png') repeat-y !important;
+	border:1px solid #999;
+	background-size: 100% 100% !important;
 }
 
 
+table.print-products-inner-table{
+}
 
 table.print-products-inner-table tr.content td{
 	border-width:0px;
+	border-color:#fff;
+}
+
+table.print-products-inner-table tr td{
+	padding:5px 10px;
+	border-bottom-width:0px !important;
 }
 
 table.print-products-inner-table tr td:first-child{
@@ -202,33 +246,51 @@ table.print-products-inner-table tr td:first-child{
 table.print-products-inner-table tr td:last-child{
 	border-right-width:0px;
 }
+table.print-products tr td.amount{
+	text-align: right;
+}
 
 
 table.print tr td{
-	padding:5px 10px;
+	padding:5px 0px;
 }
 
 
 
 
 table.disclaimer{
-	position:absolute;
-	bottom:90px;
 }
 
 table.disclaimer tr td{
 	padding:10px 10px 0px 10px;
-	padding-top:50px;
+	padding-top:30px;
 	vertical-align: middle;
+}
+
+.dotted{
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+}
+
+.errors{
+	margin-bottom:25px;
 }
 
 
 
-
 @media print
-{
+{  
+
+	body {-webkit-print-color-adjust: exact;}
+
+	@page { margin: 0; }
+	
+	body{
+		margin: 5mm 5mm 5mm 25mm;  
+	}
+
 	table tr td{
-		font-size:20px;
+		font-size:14px;
 	}
    
    button.positiveButton, button.neutralButton{
@@ -236,9 +298,30 @@ table.disclaimer tr td{
    }
 
    table.print tr.header td{
-		background-color:#f1f1f1 !important;
-		-webkit-print-color-adjust: exact; 
+		background-color:#ccc !important;
    }
 
    
+}
+
+
+.small{
+	font-size:13px;
+	margin-top:20px;
+}
+
+
+
+
+.print-div-table{
+
+}
+
+.print-div-table .print-row{
+
+}
+
+.print-div-table .print-row .print-col{
+	float:left;
+	padding:5px 10px;
 }
