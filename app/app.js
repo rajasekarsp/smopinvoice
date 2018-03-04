@@ -15,6 +15,7 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 	$scope.preparedBy = "MSP";
 	$scope.checkedBy = "MSP";
 
+$scope.invoiceOrgType = 'Original';
 	$scope.preview = true;
 	/* PRODUCTS */
 	$scope.products.push(new Product());

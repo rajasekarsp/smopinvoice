@@ -5,7 +5,6 @@
 		font-size:11px;
 	}
 
-
 	button{
 		font-size:18px;
 	}
@@ -25,6 +24,10 @@
 		resize: none;
 		border: 1px solid #ddd;
 	
+	}
+
+	.clearfix{
+		clear: both;
 	}
   
 	table{
@@ -146,6 +149,11 @@
 		border: 1px solid #aaa;
 		padding:10px;
 	}
+	
+	table.print-products tr.border td.sub-info{
+		padding-top:1px;
+		padding-bottom:1px;
+	}
 /* Bootstrap Overrides */
 
 @media (min-width: 1200px){
@@ -167,7 +175,9 @@ table.print{
 table.print tr td{
 	vertical-align: top;
 }
-
+table.print tr td:first-child{
+	width: 335px;
+}
 table.print tr.design td{
 	height:70px;
 }
@@ -211,7 +221,6 @@ table.print-products tr td .product-cell-value{
 }
 
 table.print tr.content td{
-	/* LOOSE KEETHI */
 	/*
 	border:1px solid #aaa;
 	*/
@@ -219,8 +228,7 @@ table.print tr.content td{
 
 table.print-products tr td.print-products-inner-table-container{
 
-	height:300px;
-	/* LOOSE KEETHI */
+	height:320px;
 	background:url('images/rulers_2.png') repeat-y !important;
 	border:1px solid #999;
 	background-size: 100% 100% !important;
@@ -259,11 +267,12 @@ table.print tr td{
 
 
 table.disclaimer{
+	border: 1px solid #aaa;
+    border-top: none;
 }
 
 table.disclaimer tr td{
 	padding:10px 10px 0px 10px;
-	padding-top:30px;
 	vertical-align: middle;
 }
 
@@ -286,7 +295,7 @@ table.disclaimer tr td{
 	@page { margin: 0; }
 	
 	body{
-		margin: 5mm 5mm 5mm 25mm;  
+		margin: 10mm 5mm 5mm 15mm;  
 	}
 
 	table tr td{
@@ -305,13 +314,18 @@ table.disclaimer tr td{
 }
 
 
-.small{
-	font-size:13px;
-	margin-top:20px;
+.terms-container{
+	font-size:12px;
+}
+.terms-container ul{ 
+	padding: 0px 10px; 
+	list-style-type: square
 }
 
-
-
+.terms-container ul li{
+	margin-left:10px;
+	margin-bottom:1px;
+}
 
 .print-div-table{
 
@@ -324,4 +338,49 @@ table.disclaimer tr td{
 .print-div-table .print-row .print-col{
 	float:left;
 	padding:5px 10px;
+}
+
+.company-name{
+	font-size:16px;
+	font-weight:bold;
+	margin-top:5px;
+}
+table.print-preview-header td.title {
+	background: url(images/SMOP_LOGO.png) no-repeat 50px 15px !important;
+	background-size: 110px !important;
+	text-align: center;
+	padding-left: 110px;
+}
+table.print-preview-header td.title p{
+	margin-bottom: 0;
+	font-size: 13px;
+}
+table.print-preview-header td.title .company-name{
+	font-size: 26px;
+}
+table.print-preview-header td.title .company-moto{
+	margin-bottom: 0;
+	font-size: 14px;
+	text-transform: capitalize;
+}
+table.print-preview-header td.title .company-moto.line-2{
+	margin-bottom: 5px;
+}
+table.print-preview-header td.details {
+	width: 170px;
+}
+div.tax-invoice p{
+	text-align:  center;
+	font-size: 16px;
+}
+/* contact-info*/
+div.contact-info{
+	clear: both;
+	font-size: 14px;
+}
+div.contact-info p{
+	margin-bottom: 0;
+}
+div.contact-info p span:first-child{
+	font-weight: bold;
 }

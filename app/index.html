@@ -75,14 +75,25 @@
 							<table class="details">
 								<thead>
 									<tr>
-										<td style="width:30%;">Date</td>
+										<td>Original / Copy</td>
 										<td>
-											<input name="invoiceDate" type="date" ng-model="invoiceDate" />
+											<div class="radio-container">
+												<input type="radio" id="invoice-original-option" name="invoiceOrgType" value="Original" ng-model="invoiceOrgType"> <label for="invoice-original-option">Original</label><br>
+											</div>
+											<div class="radio-container">
+												<input type="radio" id="invoice-copy-option" name="invoiceOrgType" value="Copy" ng-model="invoiceOrgType"><label for="invoice-copy-option">Copy</label><br>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>Invoice No</td>
 										<td><input type="text" name="invoiceNo" ng-model="invoiceNo" /></td>
+									</tr>
+									<tr>
+										<td style="width:30%;">Date</td>
+										<td>
+											<input name="invoiceDate" type="date" ng-model="invoiceDate" />
+										</td>
 									</tr>
 									<tr>
 										<td>E-Waybill No</td>
@@ -130,10 +141,6 @@
 										<td><input type="text" name="lrNo" ng-model="lrNo" /></td>
 									</tr>
 									<tr>
-										<td>Despatched Date</td>
-										<td><input type="date" name="despatchedDate" ng-model="despatchedDate" /></td>
-									</tr>
-									<tr>
 										<td>Despatched To</td>
 										<td><input type="text" name="despatchedTo" ng-model="despatchedTo" /></td>
 									</tr>
@@ -166,7 +173,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="product in products">
-									<td> <textarea rows="1" name="productName1" ng-model="product.productName"></textarea></td>
+									<td> <textarea rows="3" name="productName1" ng-model="product.productName"></textarea></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="quantity" ng-model="product.quantity" /></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="rate" ng-model="product.rate" /></td>
 									<td>
@@ -252,24 +259,42 @@
 			</div>
 
 			<div id="preview" ng-show="preview">
+				<table class="print-preview-header">
+					<tr>
+						<td class="title" style="text-align:center">
+							<div class="company-name">SHREE MAHALAKSHMI OFFSET PRINTS</div>
+							<p class="company-moto line-1">Quality Offset Printers Of Trademark Labels,</p>
+							<p class="company-moto line-2">Carton Boxes, Calendars etc.,</p>
+							<p>178, Munangi Nadar Street,</p>
+							<p>Sivakasi - 626123</p> 
+						</td>
+					</tr>
+				</table>
+				<div class="contact-info">
+					<div class="pull-left">
+						<p><span>Mobile: </span><span>+91 9442840186</span></p>
+						<p><span>Phone: </span><span>04562 275403</span></p>
+
+					</div>
+					<div class="pull-right">
+						<p><span>GST No: </span><span>33AIPPP8077P1Z7</span></p>
+						<p><span>Email: </span><span>msp.smop@gmail.com</span></p>
+					</div>
+						
+				</div>
+				<div class="tax-invoice clearfix">
+					<p>
+						<strong>TAX INVOICE</strong> 
+						<span ng-if="invoiceOrgType == 'Original'">(Original)</span>
+						<span ng-if="invoiceOrgType == 'Copy'">(Copy)</span>
+					</p>
+				</div>
 				<table class="print">
 					<!--
 					<tr class="design">
 						<td colspan="3"><img src="images/header1.png" alt="" /></td>
 					</tr>
 					-->
-					<tr class="logo">
-						<td>
-							<img src="images/SMOP_LOGO.png" alt="logo" width="180" />
-						</td>
-						<td style="text-align:center">
-							<strong>INVOICE</strong><br/>
-							<strong>Shree Mahalakshmi Offset Prints</strong><br/>
-						</td>
-						<td style="text-align:right">
-							178, Munangi Nadar Street, <br/> Sivakasi - 626123<br/> GST No: <span>0934738473</span>
-						</td>
-					</tr>
 
 					<tr class="header">
 						<td>To:</td>
@@ -285,16 +310,15 @@
 							<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
 						</td>
 						<td>
-							<span ng-if="despatchedThru">Despatched Thru: <span>{{despatchedThru}}</span></span><br/>
-							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/>
-							<span ng-if="despatchedDate">Despatched Date: <span>{{despatchedDate | date}}</span></span><br/>
+							<span ng-if="despatchedThru">Despatched Thro: <span>{{despatchedThru}}</span></span><br/>
+							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/>	
 							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span></span><br/>
 							<span ng-if="documentsThru">Documents Thru: <span>{{documentsThru}}</span></span>
 						</td>
 						<td>
 							<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span></span><br/>
-							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span></span><br/>
-							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span>
+							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span><br/>
+							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span></span>
 						</td>
 					</tr>
 
@@ -348,6 +372,10 @@
 														<br/>
 														<i>(per {{product.ratePer}})</i>
 													</span>
+													<span ng-if="product.ratePer ==1">
+														<br/>
+														<i>(per unit)</i>
+													</span>
 													</div>
 												</td>
 												<td style="width:20%;" class="amount"><div class="product-cell-value">{{product.amount | number : 2}}</div></td>
@@ -358,47 +386,42 @@
 
 								<tr class="border">
 									<td colspan="2" rowspan="{{gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
-										<div class="dotted">
-											Rupees:
-											<i><span class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></span></i>
-										</div>
-										<div>
-										<div class="errors">
-											E. &amp; O.E: 
-										</div>
+										Prepared By:&nbsp;<span ng-bind="preparedBy"></span><br/>
+							<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="checkedBy"></span></div>			
+										
 										</div>
 									</td>
-									<td colspan="2">Packaging and Forwarding: </td>
-									<td class="amount">{{packingValue | number : 2}}</td>
+									<td colspan="2" class="sub-info">Packaging and Forwarding: </td>
+									<td class="amount sub-info" class="sub-info">{{packingValue | number : 2}}</td>
 								</tr>
 								<tr class="border">
-									<td colspan="2">Goods Value: </td>
-									<td class="amount">{{goodsValue | number : 2}}</td>
+									<td colspan="2" class="sub-info">Goods Value: </td>
+									<td class="amount sub-info">{{goodsValue | number : 2}}</td>
 								</tr>
 								<tr class="border" ng-if="gstType == 'GST'">
-									<td colspan="2">CGST ({{gstSlab/2}}%):</td>
-									<td class="amount">{{gstValue/2 | number : 2}}</td>
+									<td colspan="2" class="sub-info">CGST ({{gstSlab/2}}%):</td>
+									<td class="amount sub-info">{{gstValue/2 | number : 2}}</td>
 								</tr>
 								<tr class="border" ng-if="gstType == 'GST'">
-										<td colspan="2">SGST ({{gstSlab/2}}%):</td>
-										<td class="amount">{{gstValue/2 | number : 2}}</td>
+										<td colspan="2" class="sub-info">SGST ({{gstSlab/2}}%):</td>
+										<td class="amount sub-info">{{gstValue/2 | number : 2}}</td>
 									</tr>
 								<tr>
 								<tr class="border" rowspan="2" ng-if="gstType == 'IGST'">
-										<td colspan="2">IGST ({{gstSlab}}%):</td>
-										<td class="amount">{{gstValue | number : 2}}</td>
+										<td colspan="2" class="sub-info">IGST ({{gstSlab}}%):</td>
+										<td class="amount sub-info">{{gstValue | number : 2}}</td>
 									</tr>
 								<tr class="border">
-									<td colspan="2">Total: </td>
-									<td class="amount">{{totalAmount | number : 2}}</td>
+									<td colspan="2" class="sub-info">Total: </td>
+									<td class="amount sub-info">{{totalAmount | number : 2}}</td>
 								</tr>
 								<tr class="border">
-									<td colspan="2">Advance: </td>
-									<td class="amount">{{advanceAmount | number : 2}}</td>
+									<td colspan="2" class="sub-info">Advance: </td>
+									<td class="amount sub-info">{{advanceAmount | number : 2}}</td>
 								</tr>
 								<tr class="border">
-									<td colspan="2"><strong><i>Balance: </i></strong></td>
-									<td class="amount"><strong><i>{{balanceAmount | number : 2}}</i></strong></td>
+									<td colspan="2" class="sub-info"><strong>Balance:</strong></td>
+									<td class="amount sub-info"><strong>{{balanceAmount | number : 2}}</strong></td>
 								</tr>
 								
 							</table>
@@ -411,22 +434,34 @@
 
 
 				<table class="disclaimer">
-					<tr class="">
-						<td colspan="2">
-							Prepared By:&nbsp;<span ng-bind="preparedBy"></span><br/>
-							<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="checkedBy"></span></div>
-							<div class="small">
-								<strong>Terms and Conditions:</strong><br/> All transactions are made subject to Sivakasi Jurisdiction
+					<tr>
+						<td colspan="2" style="border-bottom: 1px solid #aaaaaa;">
+							<div class="dotted">
+								Rupees
+								<i><span class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></span>.</i>
 							</div>
 						</td>
-						<td colspan="2" class="text-right">
+					</tr>
+					<tr class="">
+						<td style='width: 60%;'>
+							<div class="terms-container">
+								Terms: <br/>
+								<ul>
+									<li>24% interest will be charged on overdue balance.</li>
+									<li>All transactions are subject to Sivakasi Jurisdiction only. </li>
+								</ul>
+								E.&amp;.O.E: <br/>
+							
+							</div>
+											
+						</td>
+						<td style='width: 40%;' class="text-right">
 							<div>For <strong>Shree Mahalakshmi Offset Prints</strong></div>
-							<div style="height:50px"></div>
+							<div style="height:30px"></div>
 							Proprietor
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2"></td>
 						<td colspan="2">
 							<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
 							<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
