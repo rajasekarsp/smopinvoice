@@ -2,9 +2,9 @@ var Product = function (obj) {
     var self = this;
 
     if (!obj) {
-        self.productName = "Some test data bought for test purchase at some meager amount";
-        self.quantity =200000;
-        self.rate = 12000;
+        self.productName = null;
+        self.quantity =null;
+        self.rate = null;
         self.ratePer = '1000';
         self.amount = null;
 

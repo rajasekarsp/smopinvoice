@@ -2,7 +2,6 @@
 	body{
 		background-color:#ddd;
 		font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		font-size:11px;
 	}
 
 	button{
@@ -77,7 +76,6 @@
 	}
 
 	table.taxes{
-		font-size:20px;
 	}
 	
 	table.taxes tr{
@@ -170,6 +168,7 @@
 /* Preview */
 
 table.print{
+	font-size:14px;
 }
 
 table.print tr td{
@@ -206,6 +205,10 @@ table.print tr td.product-table-container{
 	padding:30px 0px 0px 0px;
 }
 
+table.print-products{
+	font-size:15px;
+}
+
 
 table.print-products tr.content{
 	/* height:740px; */
@@ -236,6 +239,7 @@ table.print-products tr td.print-products-inner-table-container{
 
 
 table.print-products-inner-table{
+	font-size:15px;
 }
 
 table.print-products-inner-table tr.content td{
@@ -290,16 +294,15 @@ table.disclaimer tr td{
 @media print
 {  
 
-	body {-webkit-print-color-adjust: exact;}
+	body {-webkit-print-color-adjust: exact; font-size:11px !important;}
 
 	@page { margin: 0; }
 	
 	body{
-		margin: 10mm 5mm 5mm 15mm;  
+		margin: 10mm 10mm 5mm 15mm;  
 	}
 
 	table tr td{
-		font-size:14px;
 	}
    
    button.positiveButton, button.neutralButton{

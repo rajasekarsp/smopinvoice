@@ -41,6 +41,14 @@
 							<table class="details">
 								<thead>
 									<tr>
+										<td style="width:30%;">Client</td>
+										<td>
+											<select ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
+												<option value="">-- Choose Client --</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
 										<td style="width:30%;">Name</td>
 										<td><input type="text" name="clientName" ng-model="clientName" /></td>
 									</tr>
@@ -108,6 +116,12 @@
 											<div class="radio-container">
 												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="gstType"><label for="igst-option"> I-GST</label><br>
 											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>Ref No.</td>
+										<td>
+											<input type="text" name="refNo" ng-model="refNo" />
 										</td>
 									</tr>
 									<tr>
@@ -298,8 +312,7 @@
 
 					<tr class="header">
 						<td>To:</td>
-						<td>Despatch Details:</td>
-						<td class="noGrey"></td>
+						<td colspan="2">Despatch Details:</td>
 					</tr>
 					<tr class="content">
 						<td>
@@ -309,16 +322,17 @@
 							<span ng-if="clientCity">{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
 							<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
 						</td>
-						<td>
-							<span ng-if="despatchedThru">Despatched Thro: <span>{{despatchedThru}}</span></span><br/>
-							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span></span><br/>	
-							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span></span><br/>
-							<span ng-if="documentsThru">Documents Thru: <span>{{documentsThru}}</span></span>
+						<td>							
+							<span ng-if="despatchedThru">Despatched Thro: <span>{{despatchedThru}}</span><br/></span>						
+							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span><br/></span>							
+							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span><br/></span>
+							<span ng-if="documentsThru">Documents Thro: <span>{{documentsThru}}</span></span>				
 						</td>
-						<td>
-							<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span></span><br/>
-							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span></span><br/>
-							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span></span>
+						<td>														
+							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span><br/></span>
+							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span><br/></span>
+							<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span><br/></span>
+							<span ng-if="refNo">Ref No: <span>{{refNo}}</span><br/></span>						
 						</td>
 					</tr>
 
@@ -391,7 +405,7 @@
 										
 										</div>
 									</td>
-									<td colspan="2" class="sub-info">Packaging and Forwarding: </td>
+									<td colspan="2" class="sub-info">Packing and Forwarding: </td>
 									<td class="amount sub-info" class="sub-info">{{packingValue | number : 2}}</td>
 								</tr>
 								<tr class="border">
@@ -462,7 +476,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td colspan="2" style="padding-bottom:5px;">
 							<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
 							<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
 

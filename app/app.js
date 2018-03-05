@@ -1,8 +1,9 @@
 var invoiceApp = angular.module('myApp', [])
 
-invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
+invoiceApp.controller('getDetailsController',['$scope','$http', function($scope, $http)  {
 	/* DEFAULTS */
 	$scope.invoiceDate = new Date();
+	$scope.clientList = [];
 	$scope.gstType = "GST";
 	$scope.gstSlab = "18";
 	$scope.products = [];
@@ -14,9 +15,33 @@ invoiceApp.controller('getDetailsController',['$scope', function($scope)  {
 	$scope.balanceAmount = 0;
 	$scope.preparedBy = "MSP";
 	$scope.checkedBy = "MSP";
+	$scope.refNo = "";
+	
+	$http.get("data/client-data.json").then(function(response) {
+        $scope.clientList = response.data;
+	});
+
+	$scope.changeClient = function(){
+		if($scope.selectedClient){
+			$scope.clientName = $scope.selectedClient.name;
+			$scope.clientAddress1 = $scope.selectedClient.address1;
+			$scope.clientAddress2 = $scope.selectedClient.address2;
+			$scope.clientCity = $scope.selectedClient.city;
+			$scope.clientPincode = $scope.selectedClient.pincode;
+			$scope.clientGstNo = $scope.selectedClient.gstNo;
+		}
+		else{
+			$scope.clientName = null;
+			$scope.clientAddress1 = null;
+			$scope.clientAddress2 = null;
+			$scope.clientCity = null;
+			$scope.clientPincode = null;
+			$scope.clientGstNo = null;
+		}
+	}
 
 $scope.invoiceOrgType = 'Original';
-	$scope.preview = true;
+	$scope.preview = false;
 	/* PRODUCTS */
 	$scope.products.push(new Product());
 	$scope.addProduct = function(){
