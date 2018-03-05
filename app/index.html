@@ -316,7 +316,7 @@
 					</tr>
 					<tr class="content">
 						<td>
-							<span ng-if="clientName">{{clientName}}</span><br/>
+							<span class="client-name" ng-if="clientName">{{clientName}}</span><br/>
 							<span ng-if="clientAddress1">{{clientAddress1}}</span><br/>
 							<span ng-if="clientAddress2">{{clientAddress2}}</span><br/>
 							<span ng-if="clientCity">{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
@@ -328,10 +328,10 @@
 							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span><br/></span>
 							<span ng-if="documentsThru">Documents Thro: <span>{{documentsThru}}</span></span>				
 						</td>
-						<td>														
-							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span><br/></span>
+						<td>																					
+							<span ng-if="invoiceNo"><span style="text-transform: uppercase;">Invoice No: </span><span>{{invoiceNo}}</span><br/></span>
 							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span><br/></span>
-							<span ng-if="invoiceNo">Invoice No: <span>{{invoiceNo}}</span><br/></span>
+							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span><br/></span>							
 							<span ng-if="refNo">Ref No: <span>{{refNo}}</span><br/></span>						
 						</td>
 					</tr>
