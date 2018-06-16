@@ -13,7 +13,7 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="bootstrap.min.css">
-
+	<link href="angular-datepicker.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="app.css" media="screen, print" type="text/css">
 	<!-- <link rel="stylesheet" href="app.css" type="text/css" media="print" /> -->
 
@@ -22,7 +22,7 @@
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
 
-
+	<script src="angular-datepicker.js"></script>
 	<script src="app.model.js"></script>
 
 	<script src="app.js"></script>
@@ -31,7 +31,10 @@
 <body>
 	<div class="wrapper">
 		<div class="container" ng-controller="getDetailsController">
-
+			<div class="button-panel" ng-hide="preview" style="float:right;">
+				<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>
+			</div>
+			<div class="clearfix"></div>
 			<div id="form" ng-hide="preview">
 				<!-- DETAILS -->
 				<div class="row">
@@ -50,27 +53,27 @@
 									</tr>
 									<tr>
 										<td style="width:30%;">Name</td>
-										<td><input type="text" name="clientName" ng-model="clientName" /></td>
+										<td><input type="text" name="clientName" ng-model="invoice.client.clientName" /></td>
 									</tr>
 									<tr>
 										<td>Address Line 1</td>
-										<td><textarea type="text" name="clientAddress" ng-model="clientAddress1"></textarea></td>
+										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress1"></textarea></td>
 									</tr>
 									<tr>
 										<td>Address Line 2</td>
-										<td><textarea type="text" name="clientAddress" ng-model="clientAddress2"></textarea></td>
+										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress2"></textarea></td>
 									</tr>
 									<tr>
 										<td>City</td>
-										<td><input type="text" name="clientCity" ng-model="clientCity"></td>
+										<td><input type="text" name="clientCity" ng-model="invoice.client.clientCity"></td>
 									</tr>
 									<tr>
 										<td>Pincode</td>
-										<td><input type="text" name="clientPincode" ng-model="clientPincode"></td>
+										<td><input type="text" name="clientPincode" ng-model="invoice.client.clientPincode"></td>
 									</tr>
 									<tr>
 										<td>GST No</td>
-										<td><input type="text" name="clientGst" ng-model="clientGstNo" /></td>
+										<td><input type="text" name="clientGst" ng-model="invoice.client.clientGstNo" /></td>
 									</tr>
 								</thead>
 							</table>
@@ -79,61 +82,64 @@
 
 					<div class="col-md-4">
 						<fieldset>
-							<legend></legend>
+							<legend>Invoice Details</legend>
 							<table class="details">
 								<thead>
 									<tr>
 										<td>Original / Copy</td>
 										<td>
 											<div class="radio-container">
-												<input type="radio" id="invoice-original-option" name="invoiceOrgType" value="Original" ng-model="invoiceOrgType"> <label for="invoice-original-option">Original</label><br>
+												<input type="radio" id="invoice-original-option" name="invoiceOrgType" value="Original" ng-model="invoice.invoiceOrgType">												<label for="invoice-original-option">Original</label><br>
 											</div>
 											<div class="radio-container">
-												<input type="radio" id="invoice-copy-option" name="invoiceOrgType" value="Copy" ng-model="invoiceOrgType"><label for="invoice-copy-option">Copy</label><br>
+												<input type="radio" id="invoice-copy-option" name="invoiceOrgType" value="Copy" ng-model="invoice.invoiceOrgType">
+												<label for="invoice-copy-option">Copy</label><br>
 											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>Invoice No</td>
-										<td><input type="text" name="invoiceNo" ng-model="invoiceNo" /></td>
+										<td><input type="text" name="invoiceNo" ng-model="invoice.invoiceNo" /></td>
 									</tr>
 									<tr>
 										<td style="width:30%;">Date</td>
 										<td>
-											<input name="invoiceDate" type="date" ng-model="invoiceDate" />
+											<datepicker date-format="dd/MM/yyyy">
+												<input name="invoiceDate" type="text" ng-model="invoice.invoiceDate" />
+											</datepicker>
 										</td>
 									</tr>
 									<tr>
 										<td>E-Waybill No</td>
-										<td><input type="text" name="eWayBillNo" ng-model="eWayBillNo" /></td>
+										<td><input type="text" name="eWayBillNo" ng-model="invoice.eWayBillNo" /></td>
 									</tr>
 									<tr>
 										<td>GST Type</td>
 										<td>
 											<div class="radio-container">
-												<input type="radio" id="gst-option" name="gstType" value="GST" ng-model="gstType"> <label for="gst-option">GST</label><br>
+												<input type="radio" id="gst-option" name="gstType" value="GST" ng-model="invoice.gstType"> <label for="gst-option">GST</label><br>
 											</div>
 											<div class="radio-container">
-												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="gstType"><label for="igst-option"> I-GST</label><br>
+												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="invoice.gstType"><label for="igst-option"> I-GST</label><br>
 											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>Ref No.</td>
 										<td>
-											<input type="text" name="refNo" ng-model="refNo" />
+											<input type="text" name="refNo" ng-model="invoice.refNo" />
 										</td>
 									</tr>
 									<tr>
 										<td>Prepared By</td>
 										<td>
-											<input type="text" name="preparedBy" ng-model="preparedBy" />
+											<input type="text" name="preparedBy" ng-model="invoice.preparedBy" />
 										</td>
 									</tr>
 									<tr>
 										<td>Checked By</td>
 										<td>
-											<input type="text" name="checkedBy" ng-model="checkedBy" />
+											<input type="text" name="checkedBy" ng-model="invoice.checkedBy" />
 										</td>
 									</tr>
 								</thead>
@@ -148,19 +154,19 @@
 								<thead>
 									<tr>
 										<td style="width:40%;">Despatched Through</td>
-										<td><input type="text" name="despatchedThru" ng-model="despatchedThru" /></td>
+										<td><input type="text" name="despatchedThru" ng-model="invoice.despatchedThru" /></td>
 									</tr>
 									<tr>
 										<td>L.R No</td>
-										<td><input type="text" name="lrNo" ng-model="lrNo" /></td>
+										<td><input type="text" name="lrNo" ng-model="invoice.lrNo" /></td>
 									</tr>
 									<tr>
 										<td>Despatched To</td>
-										<td><input type="text" name="despatchedTo" ng-model="despatchedTo" /></td>
+										<td><input type="text" name="despatchedTo" ng-model="invoice.despatchedTo" /></td>
 									</tr>
 									<tr>
 										<td>Documents Through</td>
-										<td><input type="text" name="documentsThru" ng-model="documentsThru" /></td>
+										<td><input type="text" name="documentsThru" ng-model="invoice.documentsThru" /></td>
 									</tr>
 
 								</thead>
@@ -186,7 +192,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="product in products">
+								<tr ng-repeat="product in invoice.products">
 									<td> <textarea rows="3" name="productName1" ng-model="product.productName"></textarea></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="quantity" ng-model="product.quantity" /></td>
 									<td><input type="number" ng-change="updateAmount(product)" name="rate" ng-model="product.rate" /></td>
@@ -199,8 +205,8 @@
 									</td>
 									<td><input type="text" name="amount" disabled ng-model="product.amount" class="text-right" /></td>
 									<td>
-										<button ng-if="products.length > 1" class="button-icon" ng-click="removeProduct(product)"><img  src="images/remove.png" alt="remove" /></button>
-										<button style="cursor:default;" ng-if="products.length == 1" class="button-icon"><img  src="images/remove-disabled.png" alt="remove" /></button>
+										<button ng-if="invoice.products.length > 1" class="button-icon" ng-click="removeProduct(product)"><img  src="images/remove.png" alt="remove" /></button>
+										<button style="cursor:default;" ng-if="invoice.products.length == 1" class="button-icon"><img  src="images/remove-disabled.png" alt="remove" /></button>
 									</td>
 								</tr>
 							</tbody>
@@ -222,21 +228,21 @@
 							<tr>
 								<td>Packing and Forwarding</td>
 								<td></td>
-								<td><input style="text-align:right;" type="number" name="packingValue" ng-model="packingValue" /></td>
+								<td><input style="text-align:right;" type="number" name="packingValue" ng-model="invoice.packingValue" /></td>
 							</tr>
 							<tr>
 								<td>Goods Value</td>
 								<td style="width:20%;"></td>
 								<td class="amount">
-									<div ng-bind="goodsValue | number : 2"></div>
+									<div ng-bind="invoice.goodsValue | number : 2"></div>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<span ng-bind="gstType"></span>
+									<span ng-bind="invoice.gstType"></span>
 								</td>
 								<td>
-									<select name="gst" ng-model="gstSlab">
+									<select name="gst" ng-model="invoice.gstSlab">
 						<option value="5">5 %</option>
 						<option value="12">12 %</option>
 						<option value="18">18 %</option>
@@ -244,23 +250,23 @@
 					</select>
 								</td>
 								<td class="amount">
-									<div ng-bind="gstValue | number : 2"></div>
+									<div ng-bind="invoice.gstValue | number : 2"></div>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">Total</td>
 								<td class="amount">
-									<div ng-bind="totalAmount | number : 2"></div>
+									<div ng-bind="invoice.totalAmount | number : 2"></div>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">Less: Advance</td>
-								<td><input style="text-align:right;" type="number" name="advanceAmount" ng-model="advanceAmount" /></td>
+								<td><input style="text-align:right;" type="number" name="advanceAmount" ng-model="invoice.advanceAmount" /></td>
 							</tr>
 							<tr>
 								<td class="positive" colspan="2">Balance</td>
 								<td class="positive amount">
-									<div ng-bind="balanceAmount"></div>
+									<div ng-bind="invoice.balanceAmount"></div>
 								</td>
 							</tr>
 							<tr>
@@ -280,7 +286,7 @@
 							<p class="company-moto line-1">Quality Offset Printers Of Trademark Labels,</p>
 							<p class="company-moto line-2">Carton Boxes, Calendars etc.,</p>
 							<p>178, Munangi Nadar Street,</p>
-							<p>Sivakasi - 626123</p> 
+							<p>Sivakasi - 626123</p>
 						</td>
 					</tr>
 				</table>
@@ -294,13 +300,13 @@
 						<p><span>GST No: </span><span>33AIPPP8077P1Z7</span></p>
 						<p><span>Email: </span><span>msp.smop@gmail.com</span></p>
 					</div>
-						
+
 				</div>
 				<div class="tax-invoice clearfix">
 					<p>
-						<strong>TAX INVOICE</strong> 
-						<span ng-if="invoiceOrgType == 'Original'">(Original)</span>
-						<span ng-if="invoiceOrgType == 'Copy'">(Copy)</span>
+						<strong>TAX INVOICE</strong>
+						<span ng-if="invoice.invoiceOrgType == 'Original'">(Original)</span>
+						<span ng-if="invoice.invoiceOrgType == 'Copy'">(Copy)</span>
 					</p>
 				</div>
 				<table class="print">
@@ -316,23 +322,24 @@
 					</tr>
 					<tr class="content">
 						<td>
-							<span class="client-name" ng-if="clientName">{{clientName}}</span><br/>
-							<span ng-if="clientAddress1">{{clientAddress1}}</span><br/>
-							<span ng-if="clientAddress2">{{clientAddress2}}</span><br/>
-							<span ng-if="clientCity">{{clientCity}} </span><span ng-if="clientPincode">- {{clientPincode}}</span><br />
-							<span ng-if="clientGstNo">GST No: {{clientGstNo}}</span>
+							<span class="client-name" ng-if="invoice.client.clientName">{{invoice.client.clientName}}</span><br/>
+							<span ng-if="invoice.client.clientAddress1">{{invoice.client.clientAddress1}}</span><br/>
+							<span ng-if="invoice.client.clientAddress2">{{invoice.client.clientAddress2}}</span><br/>
+							<span ng-if="invoice.client.clientCity">{{invoice.client.clientCity}} </span><span ng-if="invoice.client.clientPincode">- {{invoice.client.clientPincode}}</span><br
+							/>
+							<span ng-if="invoice.client.clientGstNo">GST No: {{invoice.client.clientGstNo}}</span>
 						</td>
-						<td>							
-							<span ng-if="despatchedThru">Despatched Thro: <span>{{despatchedThru}}</span><br/></span>						
-							<span ng-if="lrNo">L.R. No: <span>{{lrNo}}</span><br/></span>							
-							<span ng-if="despatchedTo">Despatched To: <span>{{despatchedTo}}</span><br/></span>
-							<span ng-if="documentsThru">Documents Thro: <span>{{documentsThru}}</span></span>				
+						<td>
+							<span ng-if="invoice.despatchedThru">Despatched Thro: <span>{{invoice.despatchedThru}}</span><br/></span>
+							<span ng-if="invoice.lrNo">L.R. No: <span>{{invoice.lrNo}}</span><br/></span>
+							<span ng-if="invoice.despatchedTo">Despatched To: <span>{{invoice.despatchedTo}}</span><br/></span>
+							<span ng-if="invoice.documentsThru">Documents Thro: <span>{{invoice.documentsThru}}</span></span>
 						</td>
-						<td>																					
-							<span ng-if="invoiceNo"><span style="text-transform: uppercase;">Invoice No: </span><span>{{invoiceNo}}</span><br/></span>
-							<span ng-if="invoiceDate">Date: <span>{{invoiceDate | date}}</span><br/></span>
-							<span ng-if="eWayBillNo">E-Waybill No: <span>{{eWayBillNo}}</span><br/></span>							
-							<span ng-if="refNo">Ref No: <span>{{refNo}}</span><br/></span>						
+						<td>
+							<span ng-if="invoice.invoiceNo"><span style="text-transform: uppercase;">Invoice No: </span><span>{{invoice.invoiceNo}}</span><br/></span>
+							<span ng-if="invoice.invoiceDate">Date: <span>{{invoice.invoiceDate | date}}</span><br/></span>
+							<span ng-if="invoice.eWayBillNo">E-Waybill No: <span>{{invoice.eWayBillNo}}</span><br/></span>
+							<span ng-if="invoice.refNo">Ref No: <span>{{invoice.refNo}}</span><br/></span>
 						</td>
 					</tr>
 
@@ -366,125 +373,141 @@
 							<!-- LOOSE KEETHI -->
 							<table style="width:100%;" class="print-products">
 								<tr class="header">
-									<td style="width:8%;"><div>S.No</div></td>
-									<td style="width:42%;"><div>Particulars</div></td>
-									<td style="width:15%;"><div>Quantity</div></td>
-									<td style="width:15%;"><div>Rate</div></td>
-									<td style="width:20%;"><div>Amount</div></td>
+									<td style="width:8%;">
+										<div>S.No</div>
+									</td>
+									<td style="width:42%;">
+										<div>Particulars</div>
+									</td>
+									<td style="width:15%;">
+										<div>Quantity</div>
+									</td>
+									<td style="width:15%;">
+										<div>Rate</div>
+									</td>
+									<td style="width:20%;">
+										<div>Amount</div>
+									</td>
 								</tr>
 								<tr class="content">
 									<td colspan="5" style="padding:0px; border-bottom:0px;" class="print-products-inner-table-container">
 										<table class="print-products-inner-table">
-											<tr ng-repeat="product in products">
-												<td style="width:8%;"><div class="product-cell-value">{{$index + 1}}</div></td>
-												<td colspan="2" style="width:42%;"><div class="product-cell-value">{{product.productName}}</div></td>
+											<tr ng-repeat="product in invoice.products">
+												<td style="width:8%;">
+													<div class="product-cell-value">{{$index + 1}}</div>
+												</td>
+												<td colspan="2" style="width:42%;">
+													<div class="product-cell-value">{{product.productName}}</div>
+												</td>
 												<td style="width:15%;"><span> <div class="product-cell-value">{{product.quantity}}</div></span></td>
 												<td style="width:15%;">
-														<div class="product-cell-value">
-													{{product.rate}}
-													<span ng-if="product.ratePer !=1">
+													<div class="product-cell-value">
+														{{product.rate}}
+														<span ng-if="product.ratePer !=1">
 														<br/>
 														<i>(per {{product.ratePer}})</i>
 													</span>
-													<span ng-if="product.ratePer ==1">
+														<span ng-if="product.ratePer ==1">
 														<br/>
 														<i>(per unit)</i>
 													</span>
 													</div>
 												</td>
-												<td style="width:20%;" class="amount"><div class="product-cell-value">{{product.amount | number : 2}}</div></td>
+												<td style="width:20%;" class="amount">
+													<div class="product-cell-value">{{product.amount | number : 2}}</div>
+												</td>
 											</tr>
 										</table>
 									</td>
 								</tr>
 
 								<tr class="border">
-									<td colspan="2" rowspan="{{gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
-										Prepared By:&nbsp;<span ng-bind="preparedBy"></span><br/>
-							<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="checkedBy"></span></div>			
-										
-										</div>
-									</td>
-									<td colspan="2" class="sub-info">Packing and Forwarding: </td>
-									<td class="amount sub-info" class="sub-info">{{packingValue | number : 2}}</td>
-								</tr>
-								<tr class="border">
-									<td colspan="2" class="sub-info">Goods Value: </td>
-									<td class="amount sub-info">{{goodsValue | number : 2}}</td>
-								</tr>
-								<tr class="border" ng-if="gstType == 'GST'">
-									<td colspan="2" class="sub-info">CGST ({{gstSlab/2}}%):</td>
-									<td class="amount sub-info">{{gstValue/2 | number : 2}}</td>
-								</tr>
-								<tr class="border" ng-if="gstType == 'GST'">
-										<td colspan="2" class="sub-info">SGST ({{gstSlab/2}}%):</td>
-										<td class="amount sub-info">{{gstValue/2 | number : 2}}</td>
-									</tr>
-								<tr>
-								<tr class="border" rowspan="2" ng-if="gstType == 'IGST'">
-										<td colspan="2" class="sub-info">IGST ({{gstSlab}}%):</td>
-										<td class="amount sub-info">{{gstValue | number : 2}}</td>
-									</tr>
-								<tr class="border">
-									<td colspan="2" class="sub-info">Total: </td>
-									<td class="amount sub-info">{{totalAmount | number : 2}}</td>
-								</tr>
-								<tr class="border">
-									<td colspan="2" class="sub-info">Advance: </td>
-									<td class="amount sub-info">{{advanceAmount | number : 2}}</td>
-								</tr>
-								<tr class="border">
-									<td colspan="2" class="sub-info"><strong>Balance:</strong></td>
-									<td class="amount sub-info"><strong>{{balanceAmount | number : 2}}</strong></td>
-								</tr>
-								
-							</table>
-						</td>
-					</tr>
+									<td colspan="2" rowspan="{{invoice.gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
+										Prepared By:&nbsp;<span ng-bind="invoice.preparedBy"></span><br/>
+										<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="invoice.checkedBy"></span></div>
 
-
-				</table>
-
-
-
-				<table class="disclaimer">
-					<tr>
-						<td colspan="2" style="border-bottom: 1px solid #aaaaaa;">
-							<div class="dotted">
-								Rupees
-								<i><span class="captitalize" ng-bind="wordsConvertor(balanceAmount)"></span>.</i>
-							</div>
-						</td>
-					</tr>
-					<tr class="">
-						<td style='width: 60%;'>
-							<div class="terms-container">
-								Terms: <br/>
-								<ul>
-									<li>24% interest will be charged on overdue balance.</li>
-									<li>All transactions are subject to Sivakasi Jurisdiction only. </li>
-								</ul>
-								E.&amp;.O.E: <br/>
-							
-							</div>
-											
-						</td>
-						<td style='width: 40%;' class="text-right">
-							<div>For <strong>Shree Mahalakshmi Offset Prints</strong></div>
-							<div style="height:30px"></div>
-							Proprietor
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="padding-bottom:5px;">
-							<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
-							<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
-
-						</td>
-					</tr>
-				</table>
 			</div>
+			</td>
+			<td colspan="2" class="sub-info">Packing and Forwarding: </td>
+			<td class="amount sub-info" class="sub-info">{{invoice.packingValue | number : 2}}</td>
+			</tr>
+			<tr class="border">
+				<td colspan="2" class="sub-info">Goods Value: </td>
+				<td class="amount sub-info">{{invoice.goodsValue | number : 2}}</td>
+			</tr>
+			<tr class="border" ng-if="invoice.gstType == 'GST'">
+				<td colspan="2" class="sub-info">CGST ({{invoice.gstSlab/2}}%):</td>
+				<td class="amount sub-info">{{invoice.gstValue/2 | number : 2}}</td>
+			</tr>
+			<tr class="border" ng-if="invoice.gstType == 'GST'">
+				<td colspan="2" class="sub-info">SGST ({{invoice.gstSlab/2}}%):</td>
+				<td class="amount sub-info">{{invoice.gstValue/2 | number : 2}}</td>
+			</tr>
+			<tr>
+				<tr class="border" rowspan="2" ng-if="invoice.gstType == 'IGST'">
+					<td colspan="2" class="sub-info">IGST ({{invoice.gstSlab}}%):</td>
+					<td class="amount sub-info">{{invoice.gstValue | number : 2}}</td>
+				</tr>
+				<tr class="border">
+					<td colspan="2" class="sub-info">Total: </td>
+					<td class="amount sub-info">{{invoice.totalAmount | number : 2}}</td>
+				</tr>
+				<tr class="border">
+					<td colspan="2" class="sub-info">Advance: </td>
+					<td class="amount sub-info">{{invoice.advanceAmount | number : 2}}</td>
+				</tr>
+				<tr class="border">
+					<td colspan="2" class="sub-info"><strong>Balance:</strong></td>
+					<td class="amount sub-info"><strong>{{invoice.balanceAmount | number : 2}}</strong></td>
+				</tr>
+
+				</table>
+				</td>
+			</tr>
+
+
+			</table>
+
+
+
+			<table class="disclaimer">
+				<tr>
+					<td colspan="2" style="border-bottom: 1px solid #aaaaaa;">
+						<div class="dotted">
+							Rupees
+							<i><span class="captitalize" ng-bind="wordsConvertor(invoice.balanceAmount)"></span>.</i>
+						</div>
+					</td>
+				</tr>
+				<tr class="">
+					<td style='width: 60%;'>
+						<div class="terms-container">
+							Terms: <br/>
+							<ul>
+								<li>24% interest will be charged on overdue balance.</li>
+								<li>All transactions are subject to Sivakasi Jurisdiction only. </li>
+							</ul>
+							E.&amp;.O.E: <br/>
+
+						</div>
+
+					</td>
+					<td style='width: 40%;' class="text-right">
+						<div>For <strong>Shree Mahalakshmi Offset Prints</strong></div>
+						<div style="height:30px"></div>
+						Proprietor
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="padding-bottom:5px;">
+						<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
+						<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
+
+					</td>
+				</tr>
+			</table>
 		</div>
+	</div>
 	</div>
 </body>
 
