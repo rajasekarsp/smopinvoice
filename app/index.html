@@ -32,7 +32,11 @@
 	<div class="wrapper">
 		<div class="container" ng-controller="getDetailsController">
 			<div class="button-panel" ng-hide="preview" style="float:right;">
-				<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>
+				<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
+				Load Old Invoice
+				<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
+					<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.client.clientName}}</option>
+				</select>
 			</div>
 			<div class="clearfix"></div>
 			<div id="form" ng-hide="preview">
@@ -46,7 +50,7 @@
 									<tr>
 										<td style="width:30%;">Client</td>
 										<td>
-											<select ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
+											<select ng-disabled="selectedInvoiceNo" ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
 												<option value="">-- Choose Client --</option>
 											</select>
 										</td>
@@ -336,8 +340,9 @@
 							<span ng-if="invoice.documentsThru">Documents Thro: <span>{{invoice.documentsThru}}</span></span>
 						</td>
 						<td>
-							<span ng-if="invoice.invoiceNo"><span style="text-transform: uppercase;">Invoice No: </span><span>{{invoice.invoiceNo}}</span><br/></span>
+							<span ng-if="invoice.invoiceNo"><span>Invoice No: </span><span style="font-weight:bold;">{{invoice.invoiceNo}}</span><br/></span>
 							<span ng-if="invoice.invoiceDate">Date: <span>{{invoice.invoiceDate | date}}</span><br/></span>
+							<hr ng-if="invoice.eWayBillNo" class="seperator"/>
 							<span ng-if="invoice.eWayBillNo">E-Waybill No: <span>{{invoice.eWayBillNo}}</span><br/></span>
 							<span ng-if="invoice.refNo">Ref No: <span>{{invoice.refNo}}</span><br/></span>
 						</td>

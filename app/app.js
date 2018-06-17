@@ -16,8 +16,8 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 		"totalAmount": 0,
 		"advanceAmount": 0,
 		"balanceAmount": 0,
-		"preparedBy": "MSP",
-		"checkedBy": "MSP",
+		"preparedBy": "",
+		"checkedBy": "",
 		"refNo":"",
 		"despatchedThru":"",
 		"lrNo":"",
@@ -38,6 +38,13 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	$http.get("data/client-data.json").then(function (response) {
 		$scope.clientList = response.data;
 	});
+
+	/* GET OLD INVOICES LIST */
+	$scope.oldInvoiceList = [];
+	if(localStorage.getItem("prevInvoiceData")){
+		$scope.oldInvoiceList = JSON.parse(localStorage.getItem("prevInvoiceData"));
+	}
+	console.log($scope.oldInvoiceList);
 
 	$scope.changeClient = function () {
 		if ($scope.selectedClient) {
@@ -107,20 +114,32 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	}
 
 	$scope.print = function () {
-		localStorage.setItem("prevInvoiceData", angular.toJson($scope.invoice));
+		var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
+		if(!existInvoice){
+			debugger;
+			var invList = JSON.parse(JSON.stringify($scope.oldInvoiceList));
+			invList.push($scope.invoice);
+			localStorage.setItem("prevInvoiceData", angular.toJson(invList));	
+		}
 		window.print();
 	}
 
 	$scope.loadPrevInvoice = function(){
-		var prevData =  localStorage.getItem("prevInvoiceData");
-		if(prevData){
-			$scope.invoice = JSON.parse(prevData);
-			$scope.invoice.invoiceOrgType = "Copy";
+		if($scope.oldInvoiceList){
+			var selInv = $scope.findInvoice($scope.selectedInvoiceNo);
+			$scope.invoice = selInv;
+			//$scope.invoice.invoiceOrgType = "Copy";
 		}
 		else{
 			alert("Sorry! Old Invoice not available");
 		}
-		
+	}
+
+	$scope.findInvoice = function(invNo){
+		var selInv = $scope.oldInvoiceList.filter(function(item) {
+  				return item.invoiceNo === invNo;
+			})[0];
+		return selInv;
 	}
 
 }])
