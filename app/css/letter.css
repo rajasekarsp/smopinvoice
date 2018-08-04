@@ -1,0 +1,443 @@
+
+	body{
+		background-color:#ddd;
+		font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
+
+	button{
+		font-size:18px;
+	}
+	
+	fieldset{
+	}
+
+	fieldset legend{
+		font-style: italic;
+	}
+	
+	input[type=text], input[type=number], input[type=date], textarea, select{
+		font-size:20px;
+		padding:2px 5px;
+		width:100%;
+		min-height:30px;
+		resize: none;
+		border: 1px solid #ddd;
+	
+	}
+
+	.clearfix{
+		clear: both;
+	}
+  
+	table{
+		table-layout:fixed;
+		width:100%;
+	}
+	
+	table.details tr td{
+		padding:2px 5px;
+		vertical-align:middle;
+	}
+	
+	
+	table.product tr td{
+		vertical-align:top;
+		padding:5px 10px 5px 0px;
+	}
+
+	table.product tr .add-button, 	table.product tr .remove-button{
+		float:left;
+	}
+
+	table.product tr .add-button{
+		display:none;
+	}
+
+
+	table.product tr:first-child .remove-button{
+		display:none;
+	}
+
+	table.product tr:last-child .add-button{
+		display:block;
+	}
+
+	
+	.button-icon{background: transparent;
+		border: none;
+		box-shadow: none;
+		outline: none;
+	}
+
+	.button-icon img{
+		width:32px;
+		height:32px;
+		vertical-align:middle;
+	}
+
+	table.taxes{
+	}
+	
+	table.taxes tr{
+		
+	}
+	
+	table.taxes tr td{
+		padding:5px 5px;
+		vertical-align:middle;
+		border:1px solid #ddd;
+	}
+
+	table.taxes tr td.amount{
+		text-align: right;
+		padding-right:25px;
+	}
+
+	table.taxes tr td input, table.taxes tr td:last-child{
+		
+	}
+	
+	table.taxes tr td:last-child div{
+		padding-left:5px;
+	}
+	
+	.positive{
+		color:#318d1e;
+		font-weight:bold;
+		font-style: italic;
+	}
+
+	.text-right{
+		text-align: right;
+	}
+	
+	.radio-container{
+		vertical-align: middle;
+		float:left;
+		padding:10px 5px;
+	}
+
+	.positiveButton, .neutralButton{
+		padding:5px 30px;
+		color:#fff;
+		background-color:#df480f;
+		border:1px solid #df480f;
+	}
+
+	.neutralButton{
+		background-color:#ddd;
+		color:#000;
+		border:1px solid #eee;
+	}
+
+	.previewButton{
+		float:right;
+		padding:5px 10px;
+		width:100%;
+		background-color:#318d1e;
+		border:1px solid #318d1e;
+		color:#fff;
+	}
+
+	.captitalize{
+		text-transform: capitalize;
+	}
+	
+	table.print-products tr.border td{
+		border: 1px solid #aaa;
+		padding:10px;
+	}
+	
+	table.print-products tr.border td.sub-info{
+		padding-top:1px;
+		padding-bottom:1px;
+	}
+/* Bootstrap Overrides */
+
+@media (min-width: 1200px){
+	.container {
+		width: 1180px;
+		padding:0px 50px 50px 50px;
+		background-color:#fff;
+		border-left:15px solid #f1f1f1;
+		border-right:15px solid #f1f1f1;
+	}
+}
+
+.client-name{
+	font-weight: bold;
+	text-transform: uppercase;;
+}
+/* Preview */
+
+table.print{
+	font-size:14px;
+}
+
+table.print tr td{
+	vertical-align: top;
+}
+table.print tr td:first-child{
+	width: 335px;
+}
+table.print tr.design td{
+	height:70px;
+}
+
+table.print tr.logo td{
+	padding-left:0px;
+	padding-bottom:20px;
+}
+
+
+table.print tr.header > td{
+	background-color:#ccc;
+	height:20px;
+	border:1px solid #aaa;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+table.print tr.content > td{
+	border:1px solid #aaa;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+table.print tr td.product-table-container{
+	padding:30px 0px 0px 0px;
+}
+
+table.print-products{
+	font-size:15px;
+}
+
+
+table.print-products tr.content{
+	/* height:740px; */
+}
+
+table.print-products tr.content{
+
+}
+
+table.print-products tr td .product-cell-value{
+	padding-left:10px;
+	padding-right:10px;
+}
+
+table.print tr.content td{
+	/*
+	border:1px solid #aaa;
+	*/
+}
+
+table.print-products tr td.print-products-inner-table-container{
+
+	height:320px;
+	background:url('../images/rulers_2.png') repeat-y !important;
+	border:1px solid #999;
+	background-size: 100% 100% !important;
+}
+
+
+table.print-products-inner-table{
+	font-size:15px;
+}
+
+table.print-products-inner-table tr.content td{
+	border-width:0px;
+	border-color:#fff;
+}
+
+table.print-products-inner-table tr td{
+	padding:5px 10px;
+	border-bottom-width:0px !important;
+}
+
+table.print-products-inner-table tr td:first-child{
+	border-left-width:0px;
+}
+table.print-products-inner-table tr td:last-child{
+	border-right-width:0px;
+}
+table.print-products tr td.amount{
+	text-align: right;
+}
+
+
+table.print tr td{
+	padding:5px 0px;
+}
+
+
+
+
+table.disclaimer{
+	border: 1px solid #aaa;
+    border-top: none;
+}
+
+table.disclaimer tr td{
+	padding:10px 10px 0px 10px;
+	vertical-align: middle;
+}
+
+.dotted{
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+}
+
+.errors{
+	margin-bottom:25px;
+}
+
+
+
+@media print
+{  
+
+	body {-webkit-print-color-adjust: exact; font-size:11px !important;}
+
+	@page { margin: 0; }
+	
+	body.invoice{
+		margin: 9mm 10mm 5mm 15mm;  
+	}
+
+	body.letter{
+		margin: 0mm 40mm 5mm 15mm;  
+	}
+
+	table tr td{
+	}
+   
+   button.positiveButton, button.neutralButton{
+	   display:none;
+   }
+
+   table.print tr.header td{
+		background-color:#ccc !important;
+   }
+
+   
+}
+
+
+.terms-container{
+	font-size:12px;
+}
+.terms-container ul{ 
+	padding: 0px 10px; 
+	list-style-type: square
+}
+
+.terms-container ul li{
+	margin-left:10px;
+	margin-bottom:1px;
+}
+
+.print-div-table{
+
+}
+
+.print-div-table .print-row{
+
+}
+
+.print-div-table .print-row .print-col{
+	float:left;
+	padding:5px 10px;
+}
+
+.company-name{
+	font-size:16px;
+	font-weight:bold;
+	margin-top:5px;
+}
+table.print-preview-header td.title {
+	background: url(../images/SMOP_LOGO.png) no-repeat 50px 15px !important;
+	background-size: 110px !important;
+	text-align: center;
+	padding-left: 110px;
+}
+table.print-preview-header td.title p{
+	margin-bottom: 0;
+	font-size: 13px;
+}
+table.print-preview-header td.title .company-name{
+	font-size: 26px;
+}
+table.print-preview-header td.title .company-moto{
+	margin-bottom: 0;
+	font-size: 14px;
+	text-transform: capitalize;
+}
+table.print-preview-header td.title .company-moto.line-2{
+	margin-bottom: 5px;
+}
+table.print-preview-header td.details {
+	width: 170px;
+}
+div.tax-invoice p{
+	text-align:  center;
+	font-size: 16px;
+}
+/* contact-info*/
+div.contact-info{
+	clear: both;
+	font-size: 14px;
+}
+div.contact-info p{
+	margin-bottom: 0;
+}
+div.contact-info p span:first-child{
+	font-weight: bold;
+}
+
+
+._720kb-datepicker-calendar-day._720kb-datepicker-today {
+	background:red;
+	color:white;
+  }
+
+
+  #form, #preview{
+  }
+
+  .button-panel{
+	  padding:20px 0px;
+  }
+
+  .seperator{
+  	margin:7px 0px 7px 0px;
+  	border-color:#aaa;
+
+  }
+
+
+
+  .letter-message{
+  }
+
+  .letter-to-address{
+  	margin-top:30px;
+  }
+
+
+  .letter-print-content{
+  	margin-top:15px;
+  }
+
+  .letter-message-content{
+  	margin-top:30px;
+  }
+
+  .regards-content{
+  	text-align:right;
+  	margin-top:30px;
+  }
+
+  .letterhead-placeholder{
+  	height:130px;
+  }

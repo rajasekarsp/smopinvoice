@@ -235,7 +235,7 @@ table.print tr.content td{
 table.print-products tr td.print-products-inner-table-container{
 
 	height:320px;
-	background:url('images/rulers_2.png') repeat-y !important;
+	background:url('../images/rulers_2.png') repeat-y !important;
 	border:1px solid #999;
 	background-size: 100% 100% !important;
 }
@@ -352,7 +352,7 @@ table.disclaimer tr td{
 	margin-top:5px;
 }
 table.print-preview-header td.title {
-	background: url(images/SMOP_LOGO.png) no-repeat 50px 15px !important;
+	background: url(../images/SMOP_LOGO.png) no-repeat 50px 15px !important;
 	background-size: 110px !important;
 	text-align: center;
 	padding-left: 110px;

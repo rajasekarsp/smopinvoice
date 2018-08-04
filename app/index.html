@@ -9,280 +9,32 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SMOP Invoice</title>
+	<title>SMOP Utilities</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="bootstrap.min.css">
-	<link href="angular-datepicker.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="app.css" media="screen, print" type="text/css">
+	<link rel="stylesheet" href="css/lib/bootstrap.min.css">
+	<link href="css/lib/angular-datepicker.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="css/index.css" media="screen, print" type="text/css">
 	<!-- <link rel="stylesheet" href="app.css" type="text/css" media="print" /> -->
 
 
-	<script src="angular.min.js"></script>
+	<script src="js/lib/angular.min.js"></script>
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
 
-	<script src="angular-datepicker.js"></script>
-	<script src="app.model.js"></script>
-
-	<script src="app.js"></script>
+	<script src="js/lib/angular-datepicker.js"></script>
+	<script src="js/app.model.js"></script>
+	<script src="js/invoice.js"></script>
+	
 </head>
 
 <body>
 	<div class="wrapper">
 		<div class="container" ng-controller="getDetailsController">
-			<div class="button-panel" ng-hide="preview" style="float:right;">
-				<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
-				Load Old Invoice
-				<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
-					<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.client.clientName}}</option>
-				</select>
-			</div>
-			<div class="clearfix"></div>
-			<div id="form" ng-hide="preview">
-				<!-- DETAILS -->
-				<div class="row">
-					<div class="col-md-4">
-						<fieldset>
-							<legend>Client Details</legend>
-							<table class="details">
-								<thead>
-									<tr>
-										<td style="width:30%;">Client</td>
-										<td>
-											<select ng-disabled="selectedInvoiceNo" ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
-												<option value="">-- Choose Client --</option>
-											</select>
-										</td>
-									</tr>
-									<tr>
-										<td style="width:30%;">Name</td>
-										<td><input type="text" name="clientName" ng-model="invoice.client.clientName" /></td>
-									</tr>
-									<tr>
-										<td>Address Line 1</td>
-										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress1"></textarea></td>
-									</tr>
-									<tr>
-										<td>Address Line 2</td>
-										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress2"></textarea></td>
-									</tr>
-									<tr>
-										<td>City</td>
-										<td><input type="text" name="clientCity" ng-model="invoice.client.clientCity"></td>
-									</tr>
-									<tr>
-										<td>Pincode</td>
-										<td><input type="text" name="clientPincode" ng-model="invoice.client.clientPincode"></td>
-									</tr>
-									<tr>
-										<td>GST No</td>
-										<td><input type="text" name="clientGst" ng-model="invoice.client.clientGstNo" /></td>
-									</tr>
-								</thead>
-							</table>
-						</fieldset>
-					</div>
+			
+			
 
-					<div class="col-md-4">
-						<fieldset>
-							<legend>Invoice Details</legend>
-							<table class="details">
-								<thead>
-									<tr>
-										<td>Original / Copy</td>
-										<td>
-											<div class="radio-container">
-												<input type="radio" id="invoice-original-option" name="invoiceOrgType" value="Original" ng-model="invoice.invoiceOrgType">												<label for="invoice-original-option">Original</label><br>
-											</div>
-											<div class="radio-container">
-												<input type="radio" id="invoice-copy-option" name="invoiceOrgType" value="Copy" ng-model="invoice.invoiceOrgType">
-												<label for="invoice-copy-option">Copy</label><br>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>Invoice No</td>
-										<td><input type="text" name="invoiceNo" ng-model="invoice.invoiceNo" /></td>
-									</tr>
-									<tr>
-										<td style="width:30%;">Date</td>
-										<td>
-											<datepicker date-format="dd/MM/yyyy">
-												<input name="invoiceDate" type="text" ng-model="invoice.invoiceDate" />
-											</datepicker>
-										</td>
-									</tr>
-									<tr>
-										<td>E-Waybill No</td>
-										<td><input type="text" name="eWayBillNo" ng-model="invoice.eWayBillNo" /></td>
-									</tr>
-									<tr>
-										<td>GST Type</td>
-										<td>
-											<div class="radio-container">
-												<input type="radio" id="gst-option" name="gstType" value="GST" ng-model="invoice.gstType"> <label for="gst-option">GST</label><br>
-											</div>
-											<div class="radio-container">
-												<input type="radio" id="igst-option" name="gstType" value="IGST" ng-model="invoice.gstType"><label for="igst-option"> I-GST</label><br>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>Ref No.</td>
-										<td>
-											<input type="text" name="refNo" ng-model="invoice.refNo" />
-										</td>
-									</tr>
-									<tr>
-										<td>Prepared By</td>
-										<td>
-											<input type="text" name="preparedBy" ng-model="invoice.preparedBy" />
-										</td>
-									</tr>
-									<tr>
-										<td>Checked By</td>
-										<td>
-											<input type="text" name="checkedBy" ng-model="invoice.checkedBy" />
-										</td>
-									</tr>
-								</thead>
-							</table>
-						</fieldset>
-					</div>
-
-					<div class="col-md-4">
-						<fieldset>
-							<legend>Transport Details</legend>
-							<table class="details">
-								<thead>
-									<tr>
-										<td style="width:40%;">Despatched Through</td>
-										<td><input type="text" name="despatchedThru" ng-model="invoice.despatchedThru" /></td>
-									</tr>
-									<tr>
-										<td>L.R No</td>
-										<td><input type="text" name="lrNo" ng-model="invoice.lrNo" /></td>
-									</tr>
-									<tr>
-										<td>Despatched To</td>
-										<td><input type="text" name="despatchedTo" ng-model="invoice.despatchedTo" /></td>
-									</tr>
-									<tr>
-										<td>Documents Through</td>
-										<td><input type="text" name="documentsThru" ng-model="invoice.documentsThru" /></td>
-									</tr>
-
-								</thead>
-							</table>
-						</fieldset>
-					</div>
-				</div>
-
-				<hr/>
-
-				<!-- PRODUCT -->
-				<div class="row">
-					<div class="col-md-12">
-						<table class="product">
-							<thead>
-								<tr>
-									<th style="width:45%">Particulars</th>
-									<th style="width:10%;">Quantity</th>
-									<th style="width:10%;">Rate Per Unit</th>
-									<th style="width:15%;">Unit</th>
-									<th style="width:10%;">Amount</th>
-									<th style="width:5%;"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="product in invoice.products">
-									<td> <textarea rows="3" name="productName1" ng-model="product.productName"></textarea></td>
-									<td><input type="number" ng-change="updateAmount(product)" name="quantity" ng-model="product.quantity" /></td>
-									<td><input type="number" ng-change="updateAmount(product)" name="rate" ng-model="product.rate" /></td>
-									<td>
-										<select name="ratePer" ng-model="product.ratePer" ng-change="updateAmount(product)">
-											<option value="1">Unit</option>
-											<option value="100">Hundred</option>
-											<option value="1000">Thousand</option>
-										</select>
-									</td>
-									<td><input type="text" name="amount" disabled ng-model="product.amount" class="text-right" /></td>
-									<td>
-										<button ng-if="invoice.products.length > 1" class="button-icon" ng-click="removeProduct(product)"><img  src="images/remove.png" alt="remove" /></button>
-										<button style="cursor:default;" ng-if="invoice.products.length == 1" class="button-icon"><img  src="images/remove-disabled.png" alt="remove" /></button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<button ng-click="addProduct()" class="positiveButton">+ Add Product</button>
-
-
-					</div>
-
-				</div>
-
-				<!-- TAXES -->
-				<div class="row">
-					<div class="col-md-6">
-						<!-- <div ng-bind="wordsConvertor(balanceAmount)"></div> -->
-					</div>
-					<div class="col-md-6">
-						<table class="taxes">
-							<tr>
-								<td>Packing and Forwarding</td>
-								<td></td>
-								<td><input style="text-align:right;" type="number" name="packingValue" ng-model="invoice.packingValue" /></td>
-							</tr>
-							<tr>
-								<td>Goods Value</td>
-								<td style="width:20%;"></td>
-								<td class="amount">
-									<div ng-bind="invoice.goodsValue | number : 2"></div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span ng-bind="invoice.gstType"></span>
-								</td>
-								<td>
-									<select name="gst" ng-model="invoice.gstSlab">
-						<option value="5">5 %</option>
-						<option value="12">12 %</option>
-						<option value="18">18 %</option>
-						<option value="28">28 %</option>
-					</select>
-								</td>
-								<td class="amount">
-									<div ng-bind="invoice.gstValue | number : 2"></div>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">Total</td>
-								<td class="amount">
-									<div ng-bind="invoice.totalAmount | number : 2"></div>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">Less: Advance</td>
-								<td><input style="text-align:right;" type="number" name="advanceAmount" ng-model="invoice.advanceAmount" /></td>
-							</tr>
-							<tr>
-								<td class="positive" colspan="2">Balance</td>
-								<td class="positive amount">
-									<div ng-bind="invoice.balanceAmount"></div>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="3" class="text-right"><button class="positiveButton" ng-click="swapView('preview')">Print Preview >></button></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				<hr/>
-			</div>
-
-			<div id="preview" ng-show="preview">
+			
 				<table class="print-preview-header">
 					<tr>
 						<td class="title" style="text-align:center">
@@ -293,226 +45,43 @@
 							<p>Sivakasi - 626123</p>
 						</td>
 					</tr>
-				</table>
-				<div class="contact-info">
-					<div class="pull-left">
-						<p><span>Mobile: </span><span>+91 9442840186</span></p>
-						<p><span>Phone: </span><span>04562 275403</span></p>
-
-					</div>
-					<div class="pull-right">
-						<p><span>GST No: </span><span>33AIPPP8077P1Z7</span></p>
-						<p><span>Email: </span><span>msp.smop@gmail.com</span></p>
-					</div>
-
-				</div>
-				<div class="tax-invoice clearfix">
-					<p>
-						<strong>TAX INVOICE</strong>
-						<span ng-if="invoice.invoiceOrgType == 'Original'">(Original)</span>
-						<span ng-if="invoice.invoiceOrgType == 'Copy'">(Copy)</span>
-					</p>
-				</div>
-				<table class="print">
-					<!--
-					<tr class="design">
-						<td colspan="3"><img src="images/header1.png" alt="" /></td>
-					</tr>
-					-->
-
-					<tr class="header">
-						<td>To:</td>
-						<td colspan="2">Despatch Details:</td>
-					</tr>
-					<tr class="content">
-						<td>
-							<span class="client-name" ng-if="invoice.client.clientName">{{invoice.client.clientName}}</span><br/>
-							<span ng-if="invoice.client.clientAddress1">{{invoice.client.clientAddress1}}</span><br/>
-							<span ng-if="invoice.client.clientAddress2">{{invoice.client.clientAddress2}}</span><br/>
-							<span ng-if="invoice.client.clientCity">{{invoice.client.clientCity}} </span><span ng-if="invoice.client.clientPincode">- {{invoice.client.clientPincode}}</span><br
-							/>
-							<span ng-if="invoice.client.clientGstNo">GST No: {{invoice.client.clientGstNo}}</span>
-						</td>
-						<td>
-							<span ng-if="invoice.despatchedThru">Despatched Thro: <span>{{invoice.despatchedThru}}</span><br/></span>
-							<span ng-if="invoice.lrNo">L.R. No: <span>{{invoice.lrNo}}</span><br/></span>
-							<span ng-if="invoice.despatchedTo">Despatched To: <span>{{invoice.despatchedTo}}</span><br/></span>
-							<span ng-if="invoice.documentsThru">Documents Thro: <span>{{invoice.documentsThru}}</span></span>
-						</td>
-						<td>
-							<span ng-if="invoice.invoiceNo"><span>Invoice No: </span><span style="font-weight:bold;">{{invoice.invoiceNo}}</span><br/></span>
-							<span ng-if="invoice.invoiceDate">Date: <span>{{invoice.invoiceDate | date}}</span><br/></span>
-							<hr ng-if="invoice.eWayBillNo" class="seperator"/>
-							<span ng-if="invoice.eWayBillNo">E-Waybill No: <span>{{invoice.eWayBillNo}}</span><br/></span>
-							<span ng-if="invoice.refNo">Ref No: <span>{{invoice.refNo}}</span><br/></span>
-						</td>
-					</tr>
-
-
 					<tr>
-						<td class="product-table-container" colspan="3" style="padding:15px 0px 0px 0px;">
-							<!--
-							<div class="print-div-table">
-								<div class="print-row print-row-header">
-									<div class="print-col" style="width:8%;">S.No</div>
-									<div class="print-col" style="width:42%;">Particulars</div>
-									<div class="print-col" style="width:15%;">Quantity</div>
-									<div class="print-col" style="width:15%;">Rate</div>
-									<div class="print-col" style="width:20%;">Amount</div>
+						<td>
+							<div class="row" style="margin:20px 0px">
+								<div class="col-md-3">
 								</div>
-								<div class="print-row" ng-repeat="product in products">
-									<div class="print-col" style="width:8%;">{{$index + 1}}</div>
-									<div class="print-col" style="width:42%;">{{product.productName}}</div>
-									<div class="print-col" style="width:15%;">{{product.quantity}}</div>
-									<div class="print-col" style="width:10%;">{{product.rate}}
-										<span ng-if="product.ratePer !=1">
-												<br/>
-												<i>(per {{product.ratePer}})</i>
-											</span></div>
-									<div class="print-col" style="width:20%;">{{product.amount | number : 2}}</div>
-									<div class="clearfix"></div>
+								<div class="col-md-6">
+									<h4 style="text-align: center;">Select a utility</h4>
+									<table class="alt">
+										<tr>
+											<td>
+												Prepare a Invoice
+											</td>
+											<td>
+												<a href="invoice.html">Select</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Print a Letter
+											</td>
+											<td>
+												<a href="letter.html">Select</a>
+											</td>
+										</tr>
+									</table>
+								</div>
+
+								<div class="col-md-3">
 								</div>
 							</div>
-							-->
-							<!-- PRODUCT TABLE -->
-							<!-- LOOSE KEETHI -->
-							<table style="width:100%;" class="print-products">
-								<tr class="header">
-									<td style="width:8%;">
-										<div>S.No</div>
-									</td>
-									<td style="width:42%;">
-										<div>Particulars</div>
-									</td>
-									<td style="width:15%;">
-										<div>Quantity</div>
-									</td>
-									<td style="width:15%;">
-										<div>Rate</div>
-									</td>
-									<td style="width:20%;">
-										<div>Amount</div>
-									</td>
-								</tr>
-								<tr class="content">
-									<td colspan="5" style="padding:0px; border-bottom:0px;" class="print-products-inner-table-container">
-										<table class="print-products-inner-table">
-											<tr ng-repeat="product in invoice.products">
-												<td style="width:8%;">
-													<div class="product-cell-value">{{$index + 1}}</div>
-												</td>
-												<td colspan="2" style="width:42%;">
-													<div class="product-cell-value">{{product.productName}}</div>
-												</td>
-												<td style="width:15%;"><span> <div class="product-cell-value">{{product.quantity}}</div></span></td>
-												<td style="width:15%;">
-													<div class="product-cell-value">
-														{{product.rate}}
-														<span ng-if="product.ratePer !=1">
-														<br/>
-														<i>(per {{product.ratePer}})</i>
-													</span>
-														<span ng-if="product.ratePer ==1">
-														<br/>
-														<i>(per unit)</i>
-													</span>
-													</div>
-												</td>
-												<td style="width:20%;" class="amount">
-													<div class="product-cell-value">{{product.amount | number : 2}}</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-
-								<tr class="border">
-									<td colspan="2" rowspan="{{invoice.gstType== 'GST' ? 8 : 7}}" style="vertical-align:bottom;">
-										Prepared By:&nbsp;<span ng-bind="invoice.preparedBy"></span><br/>
-										<div style="margin-top:5px;">Checked By:&nbsp;&nbsp;<span ng-bind="invoice.checkedBy"></span></div>
-
-			</div>
-			</td>
-			<td colspan="2" class="sub-info">Packing and Forwarding: </td>
-			<td class="amount sub-info" class="sub-info">{{invoice.packingValue | number : 2}}</td>
-			</tr>
-			<tr class="border">
-				<td colspan="2" class="sub-info">Goods Value: </td>
-				<td class="amount sub-info">{{invoice.goodsValue | number : 2}}</td>
-			</tr>
-			<tr class="border" ng-if="invoice.gstType == 'GST'">
-				<td colspan="2" class="sub-info">CGST ({{invoice.gstSlab/2}}%):</td>
-				<td class="amount sub-info">{{invoice.gstValue/2 | number : 2}}</td>
-			</tr>
-			<tr class="border" ng-if="invoice.gstType == 'GST'">
-				<td colspan="2" class="sub-info">SGST ({{invoice.gstSlab/2}}%):</td>
-				<td class="amount sub-info">{{invoice.gstValue/2 | number : 2}}</td>
-			</tr>
-			<tr>
-				<tr class="border" rowspan="2" ng-if="invoice.gstType == 'IGST'">
-					<td colspan="2" class="sub-info">IGST ({{invoice.gstSlab}}%):</td>
-					<td class="amount sub-info">{{invoice.gstValue | number : 2}}</td>
-				</tr>
-				<tr class="border">
-					<td colspan="2" class="sub-info">Total: </td>
-					<td class="amount sub-info">{{invoice.totalAmount | number : 2}}</td>
-				</tr>
-				<tr class="border">
-					<td colspan="2" class="sub-info">Advance: </td>
-					<td class="amount sub-info">{{invoice.advanceAmount | number : 2}}</td>
-				</tr>
-				<tr class="border">
-					<td colspan="2" class="sub-info"><strong>Balance:</strong></td>
-					<td class="amount sub-info"><strong>{{invoice.balanceAmount | number : 2}}</strong></td>
-				</tr>
-
+						</td>
+					</tr>
 				</table>
-				</td>
-			</tr>
+				
+			</div>
 
 
-			</table>
-
-
-
-			<table class="disclaimer">
-				<tr>
-					<td colspan="2" style="border-bottom: 1px solid #aaaaaa;">
-						<div class="dotted">
-							Rupees
-							<i><span class="captitalize" ng-bind="wordsConvertor(invoice.balanceAmount)"></span>.</i>
-						</div>
-					</td>
-				</tr>
-				<tr class="">
-					<td style='width: 60%;'>
-						<div class="terms-container">
-							Terms: <br/>
-							<ul>
-								<li>24% interest will be charged on overdue balance.</li>
-								<li>All transactions are subject to Sivakasi Jurisdiction only. </li>
-							</ul>
-							E.&amp;.O.E: <br/>
-
-						</div>
-
-					</td>
-					<td style='width: 40%;' class="text-right">
-						<div>For <strong>Shree Mahalakshmi Offset Prints</strong></div>
-						<div style="height:30px"></div>
-						Proprietor
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" style="padding-bottom:5px;">
-						<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
-						<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
-
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
 	</div>
 </body>
 
