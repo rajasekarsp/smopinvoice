@@ -1,0 +1,205 @@
+<!DOCTYPE html ng-app="myletterApp">
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myletterApp" class="no-js">
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SMOP Invoice</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/lib/bootstrap.min.css">
+	<link href="css/lib/angular-datepicker.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="css/letter.css" media="screen, print" type="text/css">
+	<!-- <link rel="stylesheet" href="app.css" type="text/css" media="print" /> -->
+	
+	<script src="js/lib/angular.min.js"></script>
+
+	<script src="js/lib/tinymce.min.js"></script>
+	<script src="js/lib/tinymce-theme.min.js"></script>
+
+	<script src="js/lib/angular-ui-tinymce.js"></script>
+	<script src="js/lib/angular-sanitize.min.js"></script>
+
+	<script src="js/lib/angular-datepicker.js"></script>
+	<script src="js/app.model.js"></script>
+
+	<script src="js/letter.js"></script>
+</head>
+
+<body class="letter">
+	<div class="wrapper">
+		<div class="container" ng-controller="letterController">
+			
+			<div id="form" ng-hide="preview">
+				<!-- DETAILS -->
+				<br/>
+				<div class="row">
+					<div class="col-md-4">
+						<fieldset>
+							<legend>To</legend>
+							<table class="details">
+								<thead>
+									<tr>
+										<td style="width:30%;">Client</td>
+										<td>
+											<select ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
+												<option value="">-- Choose Client --</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td style="width:30%;">Name</td>
+										<td><input type="text" name="clientName" ng-model="letter.client.clientName" /></td>
+									</tr>
+									<tr>
+										<td>Address Line 1</td>
+										<td><textarea type="text" name="clientAddress" ng-model="letter.client.clientAddress1"></textarea></td>
+									</tr>
+									<tr>
+										<td>Address Line 2</td>
+										<td><textarea type="text" name="clientAddress" ng-model="letter.client.clientAddress2"></textarea></td>
+									</tr>
+									<tr>
+										<td>City</td>
+										<td><input type="text" name="clientCity" ng-model="letter.client.clientCity"></td>
+									</tr>
+									<tr>
+										<td>Pincode</td>
+										<td><input type="text" name="clientPincode" ng-model="letter.client.clientPincode"></td>
+									</tr>
+								</thead>
+							</table>
+						</fieldset>
+					</div>
+
+					<div class="col-md-4">
+						<fieldset>
+							<legend>References</legend>
+							<table class="details">
+								<thead>
+								<tr>
+									<td style="width:30%;">Ref</td>
+									<td><input type="text" name="letterRef" ng-model="letter.ref" /></td>
+								</tr>
+								<tr>
+									<td style="width:30%;">Date</td>
+									<td>
+										<datepicker date-format="dd/MM/yyyy">
+												<input name="letterDate" type="text" ng-model="letter.date" />
+										</datepicker>
+									</td>
+								</tr>
+								<tr>
+									<td>Salutation</td>
+									<td>
+										<div class="radio-container">
+											<input type="radio" id="letter-sirs-option" name="letterSalutation" value="Sirs" ng-model="letter.salutation">								<label for="letter-sirs-option">Sirs</label><br>
+										</div>
+										<div class="radio-container">
+											<input type="radio" id="letter-sir-option" name="letterSalutation" value="Sir" ng-model="letter.salutation">								<label for="letter-sir-option">Sir</label><br>
+										</div>
+									</td>
+								</tr>
+								</thead>
+							</table>
+						</fieldset>
+					</div>
+
+					<div class="col-md-4">
+					</div>
+					
+					<div class="col-md-12">
+						<br/>
+						<fieldset>
+								<legend>Message</legend>
+								<table class="details">
+									<thead>
+										<tr>
+											<td colspan="2">
+												<!--<textarea rows="3" style="height:312px;" name="productName1" ng-model="letter.message"></textarea>-->
+												 <textarea ui-tinymce ng-model="letter.message"></textarea>
+											</td>
+										</tr>
+									</thead>
+								</table>
+						</fieldset>
+						
+					</div>
+					
+					<hr/>
+				
+					<button style="float: right;margin:20px 20px 0px 0px" class="positiveButton" ng-click="swapView('preview')">Print Preview >></button>
+				</div>
+			</div>
+
+			<div id="preview" ng-show="preview">
+				
+				<div class="letterhead-placeholder">
+					
+
+				</div>
+
+				<div class="clearfix"></div>
+				<table class="letter-print-content">
+					<tr>
+						<td colspan="2" style="text-align: right;">
+							<strong>GST No: </strong>33AIPPP8077P1Z7 <br/><br/><br/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span> <span style="display: none;">Ref:</span> <strong>{{letter.ref}}</strong></span>
+						</td>
+						<td style="text-align: right;">
+							<br/>
+							<span style="visibility: hidden;padding-right:5px;">Date:  </span> <strong> {{letter.date | date}}&nbsp;&nbsp;&nbsp;</strong>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="letter-to-address">
+								To:<br/>
+								<span class="client-name" ng-if="letter.client.clientName">{{letter.client.clientName}}<br/></span>
+								<span ng-if="letter.client.clientAddress1">{{letter.client.clientAddress1}}<br/></span>
+								<span ng-if="letter.client.clientAddress2">{{letter.client.clientAddress2}}<br/></span>
+								<span ng-if="letter.client.clientCity">{{letter.client.clientCity}} </span><span ng-if="letter.client.clientPincode">- {{letter.client.clientPincode}}</span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="letter-message-content">
+								<div class="letter-message" ng-bind-html="htmlDisplayMessage">
+									
+								</div>
+								<div class="regards-content">
+									<strong>Yours faithfully,</strong>
+									<br/>
+									For: <strong>SHREE MAHALAKSHMI OFFSET PRINTS</strong>
+									<br/>
+									<br/>
+									<br/>
+									<span>Proprietor</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<button style="margin-top:30px;float:right;" class="positiveButton" ng-click="print()">Print</button>
+						<button style="float:right;margin-right:10px;margin-top:30px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
+						</td>
+					</tr>
+				</table>
+				
+		</div>
+	</div>
+	</div>
+</body>
+
+</html>
