@@ -102,8 +102,8 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 				$scope.invoice.goodsValue += product.amount;
 			});
 			$scope.invoice.goodsValue += $scope.invoice.packingValue;
-			$scope.invoice.gstValue = parseFloat((($scope.invoice.goodsValue + $scope.invoice.packingValue) * $scope.invoice.gstSlab / 100).toFixed(2));
-			$scope.invoice.totalAmount = parseFloat(($scope.invoice.goodsValue + $scope.invoice.packingValue + $scope.invoice.gstValue).toFixed(2));
+			$scope.invoice.gstValue = parseFloat((($scope.invoice.goodsValue) * $scope.invoice.gstSlab / 100).toFixed(2));
+			$scope.invoice.totalAmount = parseFloat(($scope.invoice.goodsValue + $scope.invoice.gstValue).toFixed(2));
 			$scope.invoice.balanceAmount = parseFloat(($scope.invoice.totalAmount - $scope.invoice.advanceAmount).toFixed(0));
 		}
 	);
