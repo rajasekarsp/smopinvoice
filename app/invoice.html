@@ -35,7 +35,7 @@
 				<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
 				Load Old Invoice
 				<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
-					<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.client.clientName}}</option>
+					<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.clientName}}</option>
 				</select>
 			</div>
 			<div class="clearfix"></div>
@@ -50,34 +50,34 @@
 									<tr>
 										<td style="width:30%;">Client</td>
 										<td>
-											<select ng-disabled="selectedInvoiceNo" ng-change="changeClient()" ng-model="selectedClient" ng-options="client.name for client in clientList">
+											<select ng-disabled="selectedInvoiceNo" ng-change="changeClient()" ng-model="selectedClient" ng-options="client.clientName for client in clientList">
 												<option value="">-- Choose Client --</option>
 											</select>
 										</td>
 									</tr>
 									<tr>
 										<td style="width:30%;">Name</td>
-										<td><input type="text" name="clientName" ng-model="invoice.client.clientName" /></td>
+										<td><input type="text" name="clientName" ng-model="invoice.clientName" /></td>
 									</tr>
 									<tr>
 										<td>Address Line 1</td>
-										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress1"></textarea></td>
+										<td><textarea type="text" name="clientAddress" ng-model="invoice.clientAddress1"></textarea></td>
 									</tr>
 									<tr>
 										<td>Address Line 2</td>
-										<td><textarea type="text" name="clientAddress" ng-model="invoice.client.clientAddress2"></textarea></td>
+										<td><textarea type="text" name="clientAddress" ng-model="invoice.clientAddress2"></textarea></td>
 									</tr>
 									<tr>
 										<td>City</td>
-										<td><input type="text" name="clientCity" ng-model="invoice.client.clientCity"></td>
+										<td><input type="text" name="clientCity" ng-model="invoice.clientCity"></td>
 									</tr>
 									<tr>
 										<td>Pincode</td>
-										<td><input type="text" name="clientPincode" ng-model="invoice.client.clientPincode"></td>
+										<td><input type="text" name="clientPincode" ng-model="invoice.clientPincode"></td>
 									</tr>
 									<tr>
 										<td>GST No</td>
-										<td><input type="text" name="clientGst" ng-model="invoice.client.clientGstNo" /></td>
+										<td><input type="text" name="clientGst" ng-model="invoice.clientGstNo" /></td>
 									</tr>
 								</thead>
 							</table>
@@ -326,12 +326,12 @@
 					</tr>
 					<tr class="content">
 						<td>
-							<span class="client-name" ng-if="invoice.client.clientName">{{invoice.client.clientName}}</span><br/>
-							<span ng-if="invoice.client.clientAddress1">{{invoice.client.clientAddress1}}</span><br/>
-							<span ng-if="invoice.client.clientAddress2">{{invoice.client.clientAddress2}}</span><br/>
-							<span ng-if="invoice.client.clientCity">{{invoice.client.clientCity}} </span><span ng-if="invoice.client.clientPincode">- {{invoice.client.clientPincode}}</span><br
+							<span class="client-name" ng-if="invoice.clientName">{{invoice.clientName}}</span><br/>
+							<span ng-if="invoice.clientAddress1">{{invoice.clientAddress1}}</span><br/>
+							<span ng-if="invoice.clientAddress2">{{invoice.clientAddress2}}</span><br/>
+							<span ng-if="invoice.clientCity">{{invoice.clientCity}} </span><span ng-if="invoice.clientPincode">- {{invoice.clientPincode}}</span><br
 							/>
-							<span ng-if="invoice.client.clientGstNo">GST No: {{invoice.client.clientGstNo}}</span>
+							<span ng-if="invoice.clientGstNo">GST No: {{invoice.clientGstNo}}</span>
 						</td>
 						<td>
 							<span ng-if="invoice.despatchedThru">Despatched Thro: <span>{{invoice.despatchedThru}}</span><br/></span>

@@ -26,6 +26,7 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 		"documentsThru":"",
 		"invoiceOrgType":"Original",
 		"client":{
+			"clientId": "",
 			"clientName":"",
 			"clientAddress1":"",
 			"clientAddress2":"",
@@ -35,38 +36,59 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 		}
 	};
 
-	$http.get("data/client-data.json").then(function (response) {
-		$scope.clientList = response.data;
-	});
+	/* INITIAL METHODS */
+	$scope.preview = false;
+
+	$scope.getClientList = function () {
+		$http.get("http://localhost:3000/api/v1/getClients").then(function (data) {
+			$scope.clientList = data.data.response;
+		});
+	}
+	$scope.getClientList();
 
 	/* GET OLD INVOICES LIST */
-	$scope.oldInvoiceList = [];
-	if(localStorage.getItem("prevInvoiceData")){
-		$scope.oldInvoiceList = JSON.parse(localStorage.getItem("prevInvoiceData"));
+	$scope.getInvoiceList = function () {
+		$scope.oldInvoiceList = [];
+		$http.get("http://localhost:3000/api/v1/getInvoices").then(function (data) {
+			angular.forEach(data.data.response, function (invoice) {
+				invoice.invoiceDate = $scope.formatDateToClient(invoice.invoiceDate);
+				$scope.oldInvoiceList.push(invoice);
+			});
+		});
 	}
-	console.log($scope.oldInvoiceList);
+	$scope.getInvoiceList();
+
+	$scope.formatDateToClient = function (dateStr) {
+		let d = new Date(dateStr);
+		let month = String(d.getMonth() + 1);
+		let day = String(d.getDate());
+		const year = String(d.getFullYear());
+		if (month.length < 2) month = '0' + month;
+		if (day.length < 2) day = '0' + day;
+		return `${day}/${month}/${year}`;
+	  }
 
 	$scope.changeClient = function () {
 		if ($scope.selectedClient) {
-			$scope.invoice.client.clientName = $scope.selectedClient.name;
-			$scope.invoice.client.clientAddress1 = $scope.selectedClient.address1;
-			$scope.invoice.client.clientAddress2 = $scope.selectedClient.address2;
-			$scope.invoice.client.clientCity = $scope.selectedClient.city;
-			$scope.invoice.client.clientPincode = $scope.selectedClient.pincode;
-			$scope.invoice.client.clientGstNo = $scope.selectedClient.gstNo;
+			$scope.invoice.clientId = $scope.selectedClient.id;
+			$scope.invoice.clientName = $scope.selectedClient.clientName;
+			$scope.invoice.clientAddress1 = $scope.selectedClient.clientAddress1;
+			$scope.invoice.clientAddress2 = $scope.selectedClient.clientAddress2;
+			$scope.invoice.clientCity = $scope.selectedClient.clientCity;
+			$scope.invoice.clientPincode = $scope.selectedClient.clientPincode;
+			$scope.invoice.clientGstNo = $scope.selectedClient.clientGstNo;
 		}
 		else {
-			$scope.invoice.client.clientName = null;
-			$scope.invoice.client.clientAddress1 = null;
-			$scope.invoice.client.clientAddress2 = null;
-			$scope.invoice.client.clientCity = null;
-			$scope.invoice.client.clientPincode = null;
-			$scope.invoice.client.clientGstNo = null;
+			$scope.invoice.clientId = null;
+			$scope.invoice.clientName = null;
+			$scope.invoice.clientAddress1 = null;
+			$scope.invoice.clientAddress2 = null;
+			$scope.invoice.clientCity = null;
+			$scope.invoice.clientPincode = null;
+			$scope.invoice.clientGstNo = null;
 		}
 	}
 
-	
-	$scope.preview = false;
 	/* PRODUCTS */
 	$scope.invoice.products.push(new Product());
 	$scope.addProduct = function () {
@@ -80,9 +102,9 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	$scope.updateAmount = function (product) {
 		product.amount = parseFloat(((product.rate * product.quantity) / product.ratePer).toFixed(2));
 	}
+
 	var ones = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
 	var tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-
 	$scope.wordsConvertor = function (num) {
 		if ((num = num.toString()).length > 9) return 'overflow';
 		n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
@@ -116,18 +138,30 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	$scope.print = function () {
 		var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
 		if(!existInvoice){
-			debugger;
-			var invList = JSON.parse(JSON.stringify($scope.oldInvoiceList));
-			invList.push($scope.invoice);
-			localStorage.setItem("prevInvoiceData", angular.toJson(invList));	
+			//var invList = JSON.parse(JSON.stringify($scope.oldInvoiceList));
+			//invList.push($scope.invoice);
+			//localStorage.setItem("prevInvoiceData", angular.toJson(invList));	
+			$scope.saveInvoice();
 		}
 		window.print();
+	}
+
+	$scope.saveInvoice = function () {
+		var params = $scope.constructSaveInvoiceParams();
+		$http.post("http://localhost:3000/api/v1/saveInvoice", params).then(function (data) {
+			$scope.getInvoiceList();
+		});
+	}
+
+	$scope.constructSaveInvoiceParams = function() {
+		return $scope.invoice;
 	}
 
 	$scope.loadPrevInvoice = function(){
 		if($scope.oldInvoiceList){
 			var selInv = $scope.findInvoice($scope.selectedInvoiceNo);
 			$scope.invoice = selInv;
+			//$scope.swapView('preview');
 			//$scope.invoice.invoiceOrgType = "Copy";
 		}
 		else{
