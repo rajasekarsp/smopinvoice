@@ -160,7 +160,7 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	$scope.loadPrevInvoice = function(){
 		if($scope.oldInvoiceList){
 			var selInv = $scope.findInvoice($scope.selectedInvoiceNo);
-			$scope.invoice = selInv;
+			$scope.invoice = Object.assign({}, selInv);
 			//$scope.swapView('preview');
 			//$scope.invoice.invoiceOrgType = "Copy";
 		}
@@ -170,10 +170,9 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	}
 
 	$scope.findInvoice = function(invNo){
-		var selInv = $scope.oldInvoiceList.filter(function(item) {
+		return $scope.oldInvoiceList.filter(function(item) {
   				return item.invoiceNo === invNo;
 			})[0];
-		return selInv;
 	}
 
 }])
