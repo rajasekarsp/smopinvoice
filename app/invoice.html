@@ -21,7 +21,7 @@
 	<script src="js/lib/angular.min.js"></script>
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>-->
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
-
+   <script src="js/lib/moment.min.js"></script>
 	<script src="js/lib/angular-datepicker.js"></script>
 	<script src="js/app.model.js"></script>
 
@@ -108,7 +108,7 @@
 									<tr>
 										<td style="width:30%;">Date</td>
 										<td>
-											<datepicker date-format="dd/MM/yyyy">
+											<datepicker date-format="yyyy-MM-dd">
 												<input name="invoiceDate" type="text" ng-model="invoice.invoiceDate" />
 											</datepicker>
 										</td>
@@ -341,7 +341,7 @@
 						</td>
 						<td>
 							<span ng-if="invoice.invoiceNo"><span>Invoice No: </span><span style="font-weight:bold;">{{invoice.invoiceNo}}</span><br/></span>
-							<span ng-if="invoice.invoiceDate">Date: <span>{{invoice.invoiceDate | date}}</span><br/></span>
+							<span ng-if="invoice.invoiceDate">Date: <span>{{invoice.invoiceDate | date: 'dd/MM/yyyy'}}</span><br/></span>
 							<hr ng-if="invoice.eWayBillNo" class="seperator"/>
 							<span ng-if="invoice.eWayBillNo">E-Waybill No: <span>{{invoice.eWayBillNo}}</span><br/></span>
 							<span ng-if="invoice.refNo">Ref No: <span>{{invoice.refNo}}</span><br/></span>
@@ -504,8 +504,9 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="padding-bottom:5px;">
-						<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
+               <td colspan="2" style="padding-bottom:5px;">
+                  <button style="float:right;" class="positiveButton" ng-click="print()">Print</button>                  
+                  <button style="float:right;margin-right:10px;" class="positiveButton" ng-click="saveDraft()">Save</button>
 						<button style="float:right;margin-right:10px;" class="neutralButton" ng-click="swapView('form')"> Back</button>
 
 					</td>

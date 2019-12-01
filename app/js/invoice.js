@@ -51,7 +51,8 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 		$scope.oldInvoiceList = [];
 		$http.get("http://localhost:3000/api/v1/getInvoices").then(function (data) {
 			angular.forEach(data.data.response, function (invoice) {
-				invoice.invoiceDate = $scope.formatDateToClient(invoice.invoiceDate);
+            var date = new Date(invoice.invoiceDate);
+            invoice.invoiceDate = moment(date).format('YYYY-MM-DD');
 				$scope.oldInvoiceList.push(invoice);
 			});
 		});
@@ -136,15 +137,19 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 	}
 
 	$scope.print = function () {
-		var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
-		if(!existInvoice){
+		$scope.saveDraft();
+		window.print();
+   }
+   
+   $scope.saveDraft = function() {
+      var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
+		if(!existInvoice) {
 			//var invList = JSON.parse(JSON.stringify($scope.oldInvoiceList));
 			//invList.push($scope.invoice);
 			//localStorage.setItem("prevInvoiceData", angular.toJson(invList));	
 			$scope.saveInvoice();
 		}
-		window.print();
-	}
+   }
 
 	$scope.saveInvoice = function () {
 		var params = $scope.constructSaveInvoiceParams();
