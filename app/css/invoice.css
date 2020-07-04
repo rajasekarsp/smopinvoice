@@ -28,6 +28,36 @@
 	.clearfix{
 		clear: both;
 	}
+
+	.loader {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-left: -175px;
+		margin-top: -100px;
+	}
+	.loader img {
+		width: 350px;
+		height: 200px;
+	}
+
+	.alert-msg{
+		position: fixed;
+		top: 20px;
+		left: 50%;
+		margin-left: -150px;
+		width: 300px;
+		text-align: center;
+		border: 1px solid rgb(166, 206, 150);
+		border-radius: 5px;
+		transition: 1s;
+	}
+
+	.alert-msg p {
+		margin: 0;
+		padding: 15px 0;
+    	font-size: 18px;
+	}
   
 	table{
 		table-layout:fixed;

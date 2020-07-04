@@ -1,6 +1,6 @@
 var invoiceApp = angular.module('myApp', ['720kb.datepicker'])
 
-invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($scope, $http) {
+invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
 	/* DEFAULTS */
 
 	$scope.invoice = {
@@ -35,6 +35,9 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
 			"clientGstNo":""
 		}
 	};
+
+	$scope.showSaveAlert = false;
+	$scope.showLoader = false;
 
 	/* INITIAL METHODS */
 	$scope.preview = false;
@@ -142,20 +145,38 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', function ($sco
    }
    
    $scope.saveDraft = function() {
-      var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
+		var existInvoice = $scope.findInvoice($scope.invoice.invoiceNo);
 		if(!existInvoice) {
 			//var invList = JSON.parse(JSON.stringify($scope.oldInvoiceList));
 			//invList.push($scope.invoice);
 			//localStorage.setItem("prevInvoiceData", angular.toJson(invList));	
+			$scope.saveInvoice();
+			return;
+		}
+		if(confirm("Do you want to save and update existing invoice?")) {
 			$scope.saveInvoice();
 		}
    }
 
 	$scope.saveInvoice = function () {
 		var params = $scope.constructSaveInvoiceParams();
+		$scope.showLoader = true;
 		$http.post("http://localhost:3000/api/v1/saveInvoice", params).then(function (data) {
+			$scope.showLoader = false;
+			$scope.saveAlert();
 			$scope.getInvoiceList();
+		})
+		.catch(function(err) {
+			$scope.showLoader = false;
+			alert("Save failed",err);
 		});
+	}
+
+	$scope.saveAlert = function() {
+		$scope.showSaveAlert = true;
+		$timeout(function() {
+			$scope.showSaveAlert = false;
+		}, 2000);
 	}
 
 	$scope.constructSaveInvoiceParams = function() {
