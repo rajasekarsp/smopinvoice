@@ -154,6 +154,7 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 			return;
 		}
 		if(confirm("Do you want to save and update existing invoice?")) {
+			$scope.invoice.clientId = existInvoice.clientId;
 			$scope.saveInvoice();
 		}
    }
