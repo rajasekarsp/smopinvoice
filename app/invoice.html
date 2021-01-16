@@ -24,22 +24,32 @@
 	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
 	<script src="js/lib/moment.min.js"></script>
 	<script src="js/lib/angular-datepicker.js"></script>
+	<script src="js/lib/alasql.js"></script>
+	<script src="js/lib/xlsx.core.min.js"></script>
+	
 	<script src="js/app.model.js"></script>
-
 	<script src="js/invoice.js"></script>
 </head>
 
 <body class="invoice">
 	<div class="wrapper">
 		<div class="container" ng-controller="getDetailsController">
-			<div class="button-panel" ng-hide="preview" style="float:right;">
-				<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
-				Load Old Invoice
-				<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
-					<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.clientName}}
-					</option>
-				</select>
+			<div class="row">
+				<div class="col-md-10">
+					<div class="button-panel" ng-hide="preview">
+						<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
+						Load Old Invoice
+						<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
+							<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.clientName}}
+							</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<button ng-click="downloadInvoices()" class="neutralButton downloadInvoiceBtn">Export</button>
+				</div>
 			</div>
+			
 			<div class="clearfix"></div>
 			<div id="form" ng-hide="preview">
 				<!-- DETAILS -->

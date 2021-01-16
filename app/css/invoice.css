@@ -438,5 +438,9 @@ div.contact-info p span:first-child{
   .seperator{
   	margin:7px 0px 7px 0px;
   	border-color:#aaa;
+  }
 
+  .downloadInvoiceBtn {
+	  margin-top: 40px;
+	  float: right;
   }

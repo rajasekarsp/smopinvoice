@@ -201,4 +201,18 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 			})[0];
 	}
 
+	$scope.downloadInvoices = function () {
+		var date = moment().format('DD-MM-YYYY');
+		var fileName = 'invoice_list_' + date;
+		var excelStyles = {
+			headers:true, 
+			column: {style:{Font:{Bold:"1", Color: "#ffffff"}, Interior:{Color:"#0e1286",Pattern:"Solid"}}}
+		};
+		alasql('SELECT datetime(invoiceDate) as [Date], invoiceNo as [Invoice No], clientName as [Client Name], eWayBillNo as [Eway Bill No], goodsValue as [Goods Value], gstValue as [GST], balanceAmount as [Total Amount] INTO XLSXML("' + fileName + '.xls",?) FROM ? order by invoiceDate DESC',[excelStyles, $scope.oldInvoiceList]);
+	};
 }])
+
+alasql.fn.datetime = function(dateStr) {
+	var date = moment(dateStr).format('DD-MM-YYYY');
+	return date.toLocaleString();
+};
