@@ -21,10 +21,11 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 		"refNo":"",
 		"despatchedThru":"",
 		"lrNo":"",
-		"despatchedDate":"",
+		"despatchedDate":null,
 		"despatchedTo":"",
 		"documentsThru":"",
 		"invoiceOrgType":"Original",
+		"year": '',
 		"client":{
 			"clientId": "",
 			"clientName":"",
@@ -35,12 +36,16 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 			"clientGstNo":""
 		}
 	};
-
+	$scope.invoice.year = getCurrentFinYear().id;
 	$scope.showSaveAlert = false;
 	$scope.showLoader = false;
 
 	/* INITIAL METHODS */
 	$scope.preview = false;
+	$scope.selectedYear = '';
+
+	
+	$scope.selectedYear = getCurrentFinYear().id;
 
 	$scope.getClientList = function () {
 		$http.get("http://localhost:3000/api/v1/getClients").then(function (data) {
@@ -51,13 +56,19 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 
 	/* GET OLD INVOICES LIST */
 	$scope.getInvoiceList = function () {
+		$scope.showLoader = true;
 		$scope.oldInvoiceList = [];
-		$http.get("http://localhost:3000/api/v1/getInvoices").then(function (data) {
+		$http.get(`http://localhost:3000/api/v1/getInvoices?year=${$scope.selectedYear}`).then(function (data) {
+			$scope.showLoader = false;
 			angular.forEach(data.data.response, function (invoice) {
             var date = new Date(invoice.invoiceDate);
             invoice.invoiceDate = moment(date).format('YYYY-MM-DD');
 				$scope.oldInvoiceList.push(invoice);
 			});
+		})
+		.catch(function(err) {
+			$scope.showLoader = false;
+			alert("Something has failed",err);
 		});
 	}
 	$scope.getInvoiceList();
@@ -181,15 +192,20 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 	}
 
 	$scope.constructSaveInvoiceParams = function() {
-		return $scope.invoice;
+		var invoiceCopy = Object.assign({}, $scope.invoice);
+		invoiceCopy.invoiceNo = `${invoiceCopy.invoiceNo}/${invoiceCopy.year}`;
+		return invoiceCopy;
 	}
 
 	$scope.loadPrevInvoice = function(){
 		if($scope.oldInvoiceList){
 			var selInv = $scope.findInvoice($scope.selectedInvoiceNo);
-			$scope.invoice = Object.assign({}, selInv);
+			var copyInv = Object.assign({}, selInv);
+			copyInv.invoiceNo = getInumberAndYear(copyInv.invoiceNo).iNo;
+			$scope.invoice = copyInv;
 			//$scope.swapView('preview');
 			//$scope.invoice.invoiceOrgType = "Copy";
+
 		}
 		else{
 			alert("Sorry! Old Invoice not available");
@@ -211,9 +227,54 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 		};
 		alasql('SELECT datetime(invoiceDate) as [Date], invoiceNo as [Invoice No], clientName as [Client Name], eWayBillNo as [Eway Bill No], goodsValue as [Goods Value], gstValue as [GST], balanceAmount as [Total Amount] INTO XLSXML("' + fileName + '.xls",?) FROM ? order by invoiceDate DESC',[excelStyles, $scope.oldInvoiceList]);
 	};
+
+	
+	$scope.oldInvoiceYearList = getFinancialYears(5);
+	$scope.invoiceYearOptions = getFinancialYears(3);
 }])
+
+
 
 alasql.fn.datetime = function(dateStr) {
 	var date = moment(dateStr).format('DD-MM-YYYY');
 	return date.toLocaleString();
 };
+
+/* UTIL FUNCTIONS */
+
+getFinancialYears = function (limit) {
+	var date = moment(new Date());
+	var currentYear	 = date.quarter() > 1 ? date.year()+1 : date.year();
+	var yearList = [];
+	var i=0;
+	while(i<limit) {
+		var year = currentYear;
+		yearList.push({
+			id:  (year-1).toString().slice(2) + '-' + year.toString().slice(2),
+			name:  (year-1) + '-' + year
+		});
+		currentYear--;
+		i++;
+	}
+	return yearList;
+}
+
+getCurrentFinYear = function () {
+	var date = moment(new Date());
+	var currentYear	 = date.quarter() > 1 ? date.year()+1 : date.year();
+	return  {
+		id:  (currentYear-1).toString().slice(2) + '-' + currentYear.toString().slice(2),
+		name:  (currentYear-1) + '-' + currentYear
+	}
+}
+
+getCombinedInvoiceNumber = function (iNo, year) {
+	return `${iNo}/${year}`;
+}
+
+getInumberAndYear = function (combinedInvoiceNumber) {
+	return {
+		iNo: combinedInvoiceNumber.split('/')[0],
+		year: combinedInvoiceNumber.split('/')[1]
+	};
+}

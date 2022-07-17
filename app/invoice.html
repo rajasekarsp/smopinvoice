@@ -38,11 +38,24 @@
 				<div class="col-md-10">
 					<div class="button-panel" ng-hide="preview">
 						<!--<button class="btn btn-primary" ng-click="loadPrevInvoice()">Load Previous Invoice</button>-->
-						Load Old Invoice
-						<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
-							<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.clientName}}
-							</option>
-						</select>
+						<div class="row">
+							<div class="col-md-12">Load Old Invoice</div>
+							<div class="col-md-3">
+								<select ng-model="selectedYear" ng-change="getInvoiceList()">
+									<!-- <option value="">Select Year</option> -->
+									<option ng-repeat="x in oldInvoiceYearList" value="{{x.id}}">{{x.name}}
+									</option>
+								</select>
+							</div>
+							<div class="col-md-9">
+								<select ng-model="selectedInvoiceNo" ng-change="loadPrevInvoice()">
+									<option ng-repeat="x in oldInvoiceList" value="{{x.invoiceNo}}">{{x.invoiceNo}} - {{x.clientName}}
+									</option>
+								</select>
+							</div>
+						</div>
+						
+						
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -123,7 +136,21 @@
 									</tr>
 									<tr>
 										<td>Invoice No</td>
-										<td><input type="text" name="invoiceNo" ng-model="invoice.invoiceNo" /></td>
+										<td>
+											<div class="row">
+												<div class="col-md-5">
+													<input type="text" name="invoiceNo" ng-model="invoice.invoiceNo" />
+													<span style="display: block; position: absolute;top:3px; right:3px;">/</span>
+												</div>
+												<div class="col-md-7" style="padding-left:0px;">
+													<input type="text" disabled ng-model="invoice.year" style="font-size:16px;" />
+													<!-- <select disabled ng-model="invoice.year" style="font-size:16px;">
+														<option ng-repeat="x in invoiceYearOptions" value="{{x.id}}">{{x.id}}
+														</option>
+													</select> -->
+												</div>
+											</div>
+										</td>
 									</tr>
 									<tr>
 										<td style="width:30%;">Date</td>
@@ -382,7 +409,7 @@
 						</td>
 						<td>
 							<span ng-if="invoice.invoiceNo"><span>Invoice No: </span><span
-									style="font-weight:bold;">{{invoice.invoiceNo}}</span><br /></span>
+									style="font-weight:bold;">{{invoice.invoiceNo}}/{{invoice.year}}</span><br /></span>
 							<span ng-if="invoice.invoiceDate">Date:
 								<span>{{invoice.invoiceDate | date: 'dd/MM/yyyy'}}</span><br /></span>
 							<hr ng-if="invoice.eWayBillNo" class="seperator" />
