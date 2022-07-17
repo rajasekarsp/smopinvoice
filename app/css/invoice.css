@@ -63,12 +63,15 @@
 		table-layout:fixed;
 		width:100%;
 	}
-	
+
 	table.details tr td{
 		padding:2px 5px;
 		vertical-align:middle;
 	}
-	
+
+	table.details tr.add-client > td {
+		text-align: right;
+	}
 	
 	table.product tr td{
 		vertical-align:top;
