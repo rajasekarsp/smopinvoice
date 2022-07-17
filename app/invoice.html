@@ -75,7 +75,7 @@
 									<tr>
 										<td style="width:30%;">Client</td>
 										<td>
-											<select ng-disabled="selectedInvoiceNo" ng-change="changeClient()"
+											<select ng-change="changeClient()"
 												ng-model="selectedClient"
 												ng-options="client.clientName for client in clientList">
 												<option value="">-- Choose Client --</option>
@@ -108,6 +108,12 @@
 									<tr>
 										<td>GST No</td>
 										<td><input type="text" name="clientGst" ng-model="invoice.clientGstNo" /></td>
+									</tr>
+									<tr ng-if="newClientSelected" class="add-client">
+										<td></td>
+										<td>
+											<button ng-click="saveClient()" class="positiveButton">Add Client</button>
+										</td>
 									</tr>
 								</thead>
 							</table>
@@ -577,7 +583,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" style="padding-bottom:5px;">
-							<button style="float:right;" class="positiveButton" ng-click="print()">Print</button>
+							<button style="float:right;" class="positiveButton" ng-click="print()">Save and Print</button>
 							<button style="float:right;margin-right:10px;" class="positiveButton"
 								ng-click="saveDraft()">Save</button>
 							<button style="float:right;margin-right:10px;" class="neutralButton"

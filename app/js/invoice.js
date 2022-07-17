@@ -40,6 +40,8 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 	$scope.showSaveAlert = false;
 	$scope.showLoader = false;
 
+	$scope.newClientSelected = false;
+
 	/* INITIAL METHODS */
 	$scope.preview = false;
 	$scope.selectedYear = '';
@@ -48,8 +50,11 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 	$scope.selectedYear = getCurrentFinYear().id;
 
 	$scope.getClientList = function () {
-		$http.get("http://localhost:3000/api/v1/getClients").then(function (data) {
-			$scope.clientList = data.data.response;
+		return $http.get("http://localhost:3000/api/v1/getClients").then(function (data) {
+			const newOption = {
+				clientName: "-- Add New --"
+			};
+			$scope.clientList = [newOption, ... data.data.response];
 		});
 	}
 	$scope.getClientList();
@@ -61,8 +66,8 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 		$http.get(`http://localhost:3000/api/v1/getInvoices?year=${$scope.selectedYear}`).then(function (data) {
 			$scope.showLoader = false;
 			angular.forEach(data.data.response, function (invoice) {
-            var date = new Date(invoice.invoiceDate);
-            invoice.invoiceDate = moment(date).format('YYYY-MM-DD');
+				var date = new Date(invoice.invoiceDate);
+				invoice.invoiceDate = moment(date).format('YYYY-MM-DD');
 				$scope.oldInvoiceList.push(invoice);
 			});
 		})
@@ -84,6 +89,11 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 	  }
 
 	$scope.changeClient = function () {
+		if($scope.selectedClient && $scope.selectedClient.clientName === '-- Add New --') {
+			$scope.newClientSelected = true;
+			clearClientValues();
+			return;
+		}
 		if ($scope.selectedClient) {
 			$scope.invoice.clientId = $scope.selectedClient.id;
 			$scope.invoice.clientName = $scope.selectedClient.clientName;
@@ -94,14 +104,60 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 			$scope.invoice.clientGstNo = $scope.selectedClient.clientGstNo;
 		}
 		else {
-			$scope.invoice.clientId = null;
-			$scope.invoice.clientName = null;
-			$scope.invoice.clientAddress1 = null;
-			$scope.invoice.clientAddress2 = null;
-			$scope.invoice.clientCity = null;
-			$scope.invoice.clientPincode = null;
-			$scope.invoice.clientGstNo = null;
+			clearClientValues();
 		}
+		$scope.newClientSelected = false;
+	}
+
+	function clearClientValues() {
+		$scope.invoice.clientId = null;
+		$scope.invoice.clientName = null;
+		$scope.invoice.clientAddress1 = null;
+		$scope.invoice.clientAddress2 = null;
+		$scope.invoice.clientCity = null;
+		$scope.invoice.clientPincode = null;
+		$scope.invoice.clientGstNo = null;
+	}
+
+	$scope.constructSaveClientParams = function() {
+		const { 
+			clientName,
+			clientAddress1,
+			clientAddress2,
+			clientCity,
+			clientPincode,
+			clientGstNo
+		} = $scope.invoice;
+
+		return {
+			clientName,
+			clientAddress1,
+			clientAddress2,
+			clientCity,
+			clientPincode,
+			clientGstNo
+		};
+	}
+
+	$scope.saveClient = function () {
+		var params = $scope.constructSaveClientParams();
+		$scope.showLoader = true;
+		$http.post("http://localhost:3000/api/v1/saveClient", params)
+		.then(function (data) {
+			$scope.saveAlert();
+			// update client list
+			$scope.getClientList()
+				.catch(() => {
+					alert("Save Client failed, Please try again!",err);
+				})
+				.finally(() => {
+					$scope.showLoader = false;
+				});
+		})
+		.catch(function(err) {
+			$scope.showLoader = false;
+			alert("Save Client failed, Please try again!",err);
+		});
 	}
 
 	/* PRODUCTS */
@@ -175,7 +231,6 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 		$scope.showLoader = true;
 		$http.post("http://localhost:3000/api/v1/saveInvoice", params).then(function (data) {
 			$scope.showLoader = false;
-			$scope.saveAlert();
 			$scope.getInvoiceList();
 		})
 		.catch(function(err) {
@@ -190,7 +245,6 @@ invoiceApp.controller('getDetailsController', ['$scope', '$http', '$timeout', fu
 			$scope.showSaveAlert = false;
 		}, 2000);
 	}
-
 	$scope.constructSaveInvoiceParams = function() {
 		var invoiceCopy = Object.assign({}, $scope.invoice);
 		invoiceCopy.invoiceNo = `${invoiceCopy.invoiceNo}/${invoiceCopy.year}`;
